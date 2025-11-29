@@ -32,11 +32,399 @@ void Vtop::_settle__TOP__2(Vtop__Syms* __restrict vlSymsp) {
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vtop::_settle__TOP__2\n"); );
     Vtop* const __restrict vlTOPp VL_ATTR_UNUSED = vlSymsp->TOPp;
     // Body
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd 
+        = vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__rd;
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdx 
+        = vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__rdx;
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rs1 
+        = vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__rs1;
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rs2 
+        = vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__rs2;
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__this_rs2 
+        = ((1U & (IData)(vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rs1))
+            ? vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rs2
+            : 0ULL);
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdt = 0ULL;
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap1 
+        = (1U & ((((0xfU & (IData)(vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd)) 
+                   + (0xfU & (IData)(vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdx))) 
+                  + (0xfU & (IData)(vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__this_rs2))) 
+                 >> 4U));
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap2 
+        = (0xfU & (((IData)(vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd) 
+                    + (IData)(vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdx)) 
+                   + (IData)(vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__this_rs2)));
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdt 
+        = ((0xfffffffffffffff7ULL & vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdt) 
+           | ((QData)((IData)(vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap1)) 
+              << 3U));
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd 
+        = ((0xfffffffffffffff0ULL & vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd) 
+           | (IData)((IData)(vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap2)));
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap1 
+        = (1U & ((((0xfU & (IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd 
+                                    >> 4U))) + (0xfU 
+                                                & (IData)(
+                                                          (vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdx 
+                                                           >> 4U)))) 
+                  + (0xfU & (IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__this_rs2 
+                                     >> 4U)))) >> 4U));
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap2 
+        = (0xfU & (((IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd 
+                             >> 4U)) + (IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdx 
+                                                >> 4U))) 
+                   + (IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__this_rs2 
+                              >> 4U))));
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdt 
+        = ((0xffffffffffffff7fULL & vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdt) 
+           | ((QData)((IData)(vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap1)) 
+              << 7U));
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd 
+        = ((0xffffffffffffff0fULL & vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd) 
+           | ((QData)((IData)(vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap2)) 
+              << 4U));
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap1 
+        = (1U & ((((0xfU & (IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd 
+                                    >> 8U))) + (0xfU 
+                                                & (IData)(
+                                                          (vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdx 
+                                                           >> 8U)))) 
+                  + (0xfU & (IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__this_rs2 
+                                     >> 8U)))) >> 4U));
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap2 
+        = (0xfU & (((IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd 
+                             >> 8U)) + (IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdx 
+                                                >> 8U))) 
+                   + (IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__this_rs2 
+                              >> 8U))));
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdt 
+        = ((0xfffffffffffff7ffULL & vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdt) 
+           | ((QData)((IData)(vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap1)) 
+              << 0xbU));
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd 
+        = ((0xfffffffffffff0ffULL & vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd) 
+           | ((QData)((IData)(vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap2)) 
+              << 8U));
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap1 
+        = (1U & ((((0xfU & (IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd 
+                                    >> 0xcU))) + (0xfU 
+                                                  & (IData)(
+                                                            (vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdx 
+                                                             >> 0xcU)))) 
+                  + (0xfU & (IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__this_rs2 
+                                     >> 0xcU)))) >> 4U));
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap2 
+        = (0xfU & (((IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd 
+                             >> 0xcU)) + (IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdx 
+                                                  >> 0xcU))) 
+                   + (IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__this_rs2 
+                              >> 0xcU))));
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdt 
+        = ((0xffffffffffff7fffULL & vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdt) 
+           | ((QData)((IData)(vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap1)) 
+              << 0xfU));
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd 
+        = ((0xffffffffffff0fffULL & vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd) 
+           | ((QData)((IData)(vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap2)) 
+              << 0xcU));
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap1 
+        = (1U & ((((0xfU & (IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd 
+                                    >> 0x10U))) + (0xfU 
+                                                   & (IData)(
+                                                             (vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdx 
+                                                              >> 0x10U)))) 
+                  + (0xfU & (IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__this_rs2 
+                                     >> 0x10U)))) >> 4U));
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap2 
+        = (0xfU & (((IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd 
+                             >> 0x10U)) + (IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdx 
+                                                   >> 0x10U))) 
+                   + (IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__this_rs2 
+                              >> 0x10U))));
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdt 
+        = ((0xfffffffffff7ffffULL & vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdt) 
+           | ((QData)((IData)(vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap1)) 
+              << 0x13U));
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd 
+        = ((0xfffffffffff0ffffULL & vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd) 
+           | ((QData)((IData)(vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap2)) 
+              << 0x10U));
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap1 
+        = (1U & ((((0xfU & (IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd 
+                                    >> 0x14U))) + (0xfU 
+                                                   & (IData)(
+                                                             (vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdx 
+                                                              >> 0x14U)))) 
+                  + (0xfU & (IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__this_rs2 
+                                     >> 0x14U)))) >> 4U));
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap2 
+        = (0xfU & (((IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd 
+                             >> 0x14U)) + (IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdx 
+                                                   >> 0x14U))) 
+                   + (IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__this_rs2 
+                              >> 0x14U))));
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdt 
+        = ((0xffffffffff7fffffULL & vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdt) 
+           | ((QData)((IData)(vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap1)) 
+              << 0x17U));
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd 
+        = ((0xffffffffff0fffffULL & vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd) 
+           | ((QData)((IData)(vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap2)) 
+              << 0x14U));
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap1 
+        = (1U & ((((0xfU & (IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd 
+                                    >> 0x18U))) + (0xfU 
+                                                   & (IData)(
+                                                             (vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdx 
+                                                              >> 0x18U)))) 
+                  + (0xfU & (IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__this_rs2 
+                                     >> 0x18U)))) >> 4U));
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap2 
+        = (0xfU & (((IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd 
+                             >> 0x18U)) + (IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdx 
+                                                   >> 0x18U))) 
+                   + (IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__this_rs2 
+                              >> 0x18U))));
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdt 
+        = ((0xfffffffff7ffffffULL & vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdt) 
+           | ((QData)((IData)(vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap1)) 
+              << 0x1bU));
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd 
+        = ((0xfffffffff0ffffffULL & vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd) 
+           | ((QData)((IData)(vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap2)) 
+              << 0x18U));
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap1 
+        = (1U & ((((0xfU & (IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd 
+                                    >> 0x1cU))) + (0xfU 
+                                                   & (IData)(
+                                                             (vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdx 
+                                                              >> 0x1cU)))) 
+                  + (0xfU & (IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__this_rs2 
+                                     >> 0x1cU)))) >> 4U));
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap2 
+        = (0xfU & (((IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd 
+                             >> 0x1cU)) + (IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdx 
+                                                   >> 0x1cU))) 
+                   + (IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__this_rs2 
+                              >> 0x1cU))));
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdt 
+        = ((0xffffffff7fffffffULL & vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdt) 
+           | ((QData)((IData)(vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap1)) 
+              << 0x1fU));
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd 
+        = ((0xffffffff0fffffffULL & vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd) 
+           | ((QData)((IData)(vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap2)) 
+              << 0x1cU));
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap1 
+        = (1U & ((((0xfU & (IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd 
+                                    >> 0x20U))) + (0xfU 
+                                                   & (IData)(
+                                                             (vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdx 
+                                                              >> 0x20U)))) 
+                  + (0xfU & (IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__this_rs2 
+                                     >> 0x20U)))) >> 4U));
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap2 
+        = (0xfU & (((IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd 
+                             >> 0x20U)) + (IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdx 
+                                                   >> 0x20U))) 
+                   + (IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__this_rs2 
+                              >> 0x20U))));
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdt 
+        = ((0xfffffff7ffffffffULL & vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdt) 
+           | ((QData)((IData)(vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap1)) 
+              << 0x23U));
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd 
+        = ((0xfffffff0ffffffffULL & vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd) 
+           | ((QData)((IData)(vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap2)) 
+              << 0x20U));
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap1 
+        = (1U & ((((0xfU & (IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd 
+                                    >> 0x24U))) + (0xfU 
+                                                   & (IData)(
+                                                             (vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdx 
+                                                              >> 0x24U)))) 
+                  + (0xfU & (IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__this_rs2 
+                                     >> 0x24U)))) >> 4U));
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap2 
+        = (0xfU & (((IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd 
+                             >> 0x24U)) + (IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdx 
+                                                   >> 0x24U))) 
+                   + (IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__this_rs2 
+                              >> 0x24U))));
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdt 
+        = ((0xffffff7fffffffffULL & vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdt) 
+           | ((QData)((IData)(vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap1)) 
+              << 0x27U));
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd 
+        = ((0xffffff0fffffffffULL & vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd) 
+           | ((QData)((IData)(vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap2)) 
+              << 0x24U));
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap1 
+        = (1U & ((((0xfU & (IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd 
+                                    >> 0x28U))) + (0xfU 
+                                                   & (IData)(
+                                                             (vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdx 
+                                                              >> 0x28U)))) 
+                  + (0xfU & (IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__this_rs2 
+                                     >> 0x28U)))) >> 4U));
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap2 
+        = (0xfU & (((IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd 
+                             >> 0x28U)) + (IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdx 
+                                                   >> 0x28U))) 
+                   + (IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__this_rs2 
+                              >> 0x28U))));
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdt 
+        = ((0xfffff7ffffffffffULL & vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdt) 
+           | ((QData)((IData)(vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap1)) 
+              << 0x2bU));
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd 
+        = ((0xfffff0ffffffffffULL & vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd) 
+           | ((QData)((IData)(vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap2)) 
+              << 0x28U));
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap1 
+        = (1U & ((((0xfU & (IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd 
+                                    >> 0x2cU))) + (0xfU 
+                                                   & (IData)(
+                                                             (vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdx 
+                                                              >> 0x2cU)))) 
+                  + (0xfU & (IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__this_rs2 
+                                     >> 0x2cU)))) >> 4U));
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap2 
+        = (0xfU & (((IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd 
+                             >> 0x2cU)) + (IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdx 
+                                                   >> 0x2cU))) 
+                   + (IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__this_rs2 
+                              >> 0x2cU))));
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdt 
+        = ((0xffff7fffffffffffULL & vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdt) 
+           | ((QData)((IData)(vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap1)) 
+              << 0x2fU));
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd 
+        = ((0xffff0fffffffffffULL & vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd) 
+           | ((QData)((IData)(vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap2)) 
+              << 0x2cU));
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap1 
+        = (1U & ((((0xfU & (IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd 
+                                    >> 0x30U))) + (0xfU 
+                                                   & (IData)(
+                                                             (vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdx 
+                                                              >> 0x30U)))) 
+                  + (0xfU & (IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__this_rs2 
+                                     >> 0x30U)))) >> 4U));
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap2 
+        = (0xfU & (((IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd 
+                             >> 0x30U)) + (IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdx 
+                                                   >> 0x30U))) 
+                   + (IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__this_rs2 
+                              >> 0x30U))));
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdt 
+        = ((0xfff7ffffffffffffULL & vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdt) 
+           | ((QData)((IData)(vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap1)) 
+              << 0x33U));
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd 
+        = ((0xfff0ffffffffffffULL & vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd) 
+           | ((QData)((IData)(vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap2)) 
+              << 0x30U));
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap1 
+        = (1U & ((((0xfU & (IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd 
+                                    >> 0x34U))) + (0xfU 
+                                                   & (IData)(
+                                                             (vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdx 
+                                                              >> 0x34U)))) 
+                  + (0xfU & (IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__this_rs2 
+                                     >> 0x34U)))) >> 4U));
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap2 
+        = (0xfU & (((IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd 
+                             >> 0x34U)) + (IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdx 
+                                                   >> 0x34U))) 
+                   + (IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__this_rs2 
+                              >> 0x34U))));
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdt 
+        = ((0xff7fffffffffffffULL & vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdt) 
+           | ((QData)((IData)(vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap1)) 
+              << 0x37U));
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd 
+        = ((0xff0fffffffffffffULL & vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd) 
+           | ((QData)((IData)(vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap2)) 
+              << 0x34U));
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap1 
+        = (1U & ((((0xfU & (IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd 
+                                    >> 0x38U))) + (0xfU 
+                                                   & (IData)(
+                                                             (vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdx 
+                                                              >> 0x38U)))) 
+                  + (0xfU & (IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__this_rs2 
+                                     >> 0x38U)))) >> 4U));
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap2 
+        = (0xfU & (((IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd 
+                             >> 0x38U)) + (IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdx 
+                                                   >> 0x38U))) 
+                   + (IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__this_rs2 
+                              >> 0x38U))));
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdt 
+        = ((0xf7ffffffffffffffULL & vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdt) 
+           | ((QData)((IData)(vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap1)) 
+              << 0x3bU));
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd 
+        = ((0xf0ffffffffffffffULL & vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd) 
+           | ((QData)((IData)(vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap2)) 
+              << 0x38U));
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap1 
+        = (1U & ((((0xfU & (IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd 
+                                    >> 0x3cU))) + (0xfU 
+                                                   & (IData)(
+                                                             (vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdx 
+                                                              >> 0x3cU)))) 
+                  + (0xfU & (IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__this_rs2 
+                                     >> 0x3cU)))) >> 4U));
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap2 
+        = (0xfU & (((IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd 
+                             >> 0x3cU)) + (IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdx 
+                                                   >> 0x3cU))) 
+                   + (IData)((vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__this_rs2 
+                              >> 0x3cU))));
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdt 
+        = ((0x7fffffffffffffffULL & vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdt) 
+           | ((QData)((IData)(vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap1)) 
+              << 0x3fU));
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd 
+        = ((0xfffffffffffffffULL & vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd) 
+           | ((QData)((IData)(vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap2)) 
+              << 0x3cU));
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdx 
+        = (vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdt 
+           << 1U);
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rs1 
+        = (vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rs1 
+           >> 1U);
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rs2 
+        = (vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rs2 
+           << 1U);
+    vlTOPp->top__DOT__cpu__DOT__pcpi_int_ready = ((IData)(vlTOPp->top__DOT__pcpi_ready) 
+                                                  | (IData)(vlTOPp->top__DOT__cpu__DOT__pcpi_mul_ready));
     vlTOPp->top__DOT__cpu__DOT__cpuregs_rs1 = ((0U 
                                                 != (IData)(vlTOPp->top__DOT__cpu__DOT__decoded_rs1))
                                                 ? vlTOPp->top__DOT__cpu__DOT__cpuregs
                                                [vlTOPp->top__DOT__cpu__DOT__decoded_rs1]
                                                 : 0U);
+    vlTOPp->top__DOT__cpu__DOT__pcpi_int_wr = 0U;
+    if (vlTOPp->top__DOT__pcpi_ready) {
+        vlTOPp->top__DOT__cpu__DOT__pcpi_int_wr = vlTOPp->top__DOT__pcpi_wr;
+    } else {
+        if (vlTOPp->top__DOT__cpu__DOT__pcpi_mul_ready) {
+            vlTOPp->top__DOT__cpu__DOT__pcpi_int_wr 
+                = vlTOPp->top__DOT__cpu__DOT__pcpi_mul_wr;
+        }
+    }
+    vlTOPp->top__DOT__cpu__DOT__pcpi_int_rd = 0U;
+    if (vlTOPp->top__DOT__pcpi_ready) {
+        vlTOPp->top__DOT__cpu__DOT__pcpi_int_rd = vlTOPp->top__DOT__pcpi_rd;
+    } else {
+        if (vlTOPp->top__DOT__cpu__DOT__pcpi_mul_ready) {
+            vlTOPp->top__DOT__cpu__DOT__pcpi_int_rd 
+                = vlTOPp->top__DOT__cpu__DOT__pcpi_mul_rd;
+        }
+    }
     vlTOPp->top__DOT__cpu__DOT__cpuregs_write = 0U;
     if ((0x40U == (IData)(vlTOPp->top__DOT__cpu__DOT__cpu_state))) {
         if (vlTOPp->top__DOT__cpu__DOT__latched_branch) {
@@ -75,6 +463,10 @@ void Vtop::_settle__TOP__2(Vtop__Syms* __restrict vlSymsp) {
             }
         }
     }
+    vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__instr_any_mulh 
+        = ((IData)(vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__instr_mulh) 
+           | ((IData)(vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__instr_mulhsu) 
+              | (IData)(vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__instr_mulhu)));
     vlTOPp->top__DOT__cpu__DOT__instr_trap = (1U & 
                                               (~ (((IData)(vlTOPp->top__DOT__cpu__DOT__instr_lui) 
                                                    | ((IData)(vlTOPp->top__DOT__cpu__DOT__instr_auipc) 
@@ -164,6 +556,100 @@ void Vtop::_settle__TOP__2(Vtop__Syms* __restrict vlSymsp) {
             }
         }
     }
+    vlTOPp->top__DOT__my_accel__DOT__p0 = (0xffffU 
+                                           & VL_MULS_III(16,16,16, 
+                                                         (0xffffU 
+                                                          & VL_EXTENDS_II(16,4, 
+                                                                          (0xfU 
+                                                                           & vlTOPp->top__DOT__cpu__DOT__reg_op1))), 
+                                                         (0xffffU 
+                                                          & VL_EXTENDS_II(16,4, 
+                                                                          (0xfU 
+                                                                           & vlTOPp->top__DOT__cpu__DOT__reg_op2)))));
+    vlTOPp->top__DOT__my_accel__DOT__p1 = (0xffffU 
+                                           & VL_MULS_III(16,16,16, 
+                                                         (0xffffU 
+                                                          & VL_EXTENDS_II(16,4, 
+                                                                          (0xfU 
+                                                                           & (vlTOPp->top__DOT__cpu__DOT__reg_op1 
+                                                                              >> 4U)))), 
+                                                         (0xffffU 
+                                                          & VL_EXTENDS_II(16,4, 
+                                                                          (0xfU 
+                                                                           & (vlTOPp->top__DOT__cpu__DOT__reg_op2 
+                                                                              >> 4U))))));
+    vlTOPp->top__DOT__my_accel__DOT__p2 = (0xffffU 
+                                           & VL_MULS_III(16,16,16, 
+                                                         (0xffffU 
+                                                          & VL_EXTENDS_II(16,4, 
+                                                                          (0xfU 
+                                                                           & (vlTOPp->top__DOT__cpu__DOT__reg_op1 
+                                                                              >> 8U)))), 
+                                                         (0xffffU 
+                                                          & VL_EXTENDS_II(16,4, 
+                                                                          (0xfU 
+                                                                           & (vlTOPp->top__DOT__cpu__DOT__reg_op2 
+                                                                              >> 8U))))));
+    vlTOPp->top__DOT__my_accel__DOT__p3 = (0xffffU 
+                                           & VL_MULS_III(16,16,16, 
+                                                         (0xffffU 
+                                                          & VL_EXTENDS_II(16,4, 
+                                                                          (0xfU 
+                                                                           & (vlTOPp->top__DOT__cpu__DOT__reg_op1 
+                                                                              >> 0xcU)))), 
+                                                         (0xffffU 
+                                                          & VL_EXTENDS_II(16,4, 
+                                                                          (0xfU 
+                                                                           & (vlTOPp->top__DOT__cpu__DOT__reg_op2 
+                                                                              >> 0xcU))))));
+    vlTOPp->top__DOT__my_accel__DOT__p4 = (0xffffU 
+                                           & VL_MULS_III(16,16,16, 
+                                                         (0xffffU 
+                                                          & VL_EXTENDS_II(16,4, 
+                                                                          (0xfU 
+                                                                           & (vlTOPp->top__DOT__cpu__DOT__reg_op1 
+                                                                              >> 0x10U)))), 
+                                                         (0xffffU 
+                                                          & VL_EXTENDS_II(16,4, 
+                                                                          (0xfU 
+                                                                           & (vlTOPp->top__DOT__cpu__DOT__reg_op2 
+                                                                              >> 0x10U))))));
+    vlTOPp->top__DOT__my_accel__DOT__p5 = (0xffffU 
+                                           & VL_MULS_III(16,16,16, 
+                                                         (0xffffU 
+                                                          & VL_EXTENDS_II(16,4, 
+                                                                          (0xfU 
+                                                                           & (vlTOPp->top__DOT__cpu__DOT__reg_op1 
+                                                                              >> 0x14U)))), 
+                                                         (0xffffU 
+                                                          & VL_EXTENDS_II(16,4, 
+                                                                          (0xfU 
+                                                                           & (vlTOPp->top__DOT__cpu__DOT__reg_op2 
+                                                                              >> 0x14U))))));
+    vlTOPp->top__DOT__my_accel__DOT__p6 = (0xffffU 
+                                           & VL_MULS_III(16,16,16, 
+                                                         (0xffffU 
+                                                          & VL_EXTENDS_II(16,4, 
+                                                                          (0xfU 
+                                                                           & (vlTOPp->top__DOT__cpu__DOT__reg_op1 
+                                                                              >> 0x18U)))), 
+                                                         (0xffffU 
+                                                          & VL_EXTENDS_II(16,4, 
+                                                                          (0xfU 
+                                                                           & (vlTOPp->top__DOT__cpu__DOT__reg_op2 
+                                                                              >> 0x18U))))));
+    vlTOPp->top__DOT__my_accel__DOT__p7 = (0xffffU 
+                                           & VL_MULS_III(16,16,16, 
+                                                         (0xffffU 
+                                                          & VL_EXTENDS_II(16,4, 
+                                                                          (0xfU 
+                                                                           & (vlTOPp->top__DOT__cpu__DOT__reg_op1 
+                                                                              >> 0x1cU)))), 
+                                                         (0xffffU 
+                                                          & VL_EXTENDS_II(16,4, 
+                                                                          (0xfU 
+                                                                           & (vlTOPp->top__DOT__cpu__DOT__reg_op2 
+                                                                              >> 0x1cU))))));
     vlTOPp->top__DOT__cpu__DOT__mem_la_write = (((IData)(vlTOPp->resetn) 
                                                  & (~ (IData)(
                                                               (0U 
@@ -295,16 +781,16 @@ void Vtop::_initial__TOP__3(Vtop__Syms* __restrict vlSymsp) {
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vtop::_initial__TOP__3\n"); );
     Vtop* const __restrict vlTOPp VL_ATTR_UNUSED = vlSymsp->TOPp;
     // Variables
-    WData/*159:0*/ __Vtemp1[5];
+    WData/*159:0*/ __Vtemp5[5];
     // Body
-    __Vtemp1[0U] = 0x2e686578U;
-    __Vtemp1[1U] = 0x77617265U;
-    __Vtemp1[2U] = 0x6669726dU;
-    __Vtemp1[3U] = 0x2f73772fU;
-    __Vtemp1[4U] = 0x2e2eU;
-    VL_READMEM_N(true, 32, 4096, 0, VL_CVT_PACK_STR_NW(5, __Vtemp1)
+    __Vtemp5[0U] = 0x2e686578U;
+    __Vtemp5[1U] = 0x77617265U;
+    __Vtemp5[2U] = 0x6669726dU;
+    __Vtemp5[3U] = 0x2f73772fU;
+    __Vtemp5[4U] = 0x2e2eU;
+    VL_READMEM_N(true, 32, 4096, 0, VL_CVT_PACK_STR_NW(5, __Vtemp5)
                  , vlTOPp->top__DOT__memory, 0, ~0ULL);
-    VL_WRITEF("RAM Yuklendi. Ilk Veri (Adres 0): %x\n",
+    VL_WRITEF("SYSTEM: RAM Loaded. First Word (Addr 0): %x\n",
               32,vlTOPp->top__DOT__memory[0U]);
 }
 
@@ -338,13 +824,17 @@ void Vtop::_ctor_var_reset() {
     out_data = VL_RAND_RESET_I(32);
     out_valid = VL_RAND_RESET_I(1);
     top__DOT__mem_valid = VL_RAND_RESET_I(1);
-    top__DOT__mem_instr = VL_RAND_RESET_I(1);
     top__DOT__mem_ready = VL_RAND_RESET_I(1);
     top__DOT__mem_addr = VL_RAND_RESET_I(32);
     top__DOT__mem_wdata = VL_RAND_RESET_I(32);
     top__DOT__mem_wstrb = VL_RAND_RESET_I(4);
     top__DOT__mem_rdata = VL_RAND_RESET_I(32);
     top__DOT__trap_signal = VL_RAND_RESET_I(1);
+    top__DOT__pcpi_valid = VL_RAND_RESET_I(1);
+    top__DOT__pcpi_insn = VL_RAND_RESET_I(32);
+    top__DOT__pcpi_wr = VL_RAND_RESET_I(1);
+    top__DOT__pcpi_rd = VL_RAND_RESET_I(32);
+    top__DOT__pcpi_ready = VL_RAND_RESET_I(1);
     { int __Vi0=0; for (; __Vi0<4096; ++__Vi0) {
             top__DOT__memory[__Vi0] = VL_RAND_RESET_I(32);
     }}
@@ -365,6 +855,13 @@ void Vtop::_ctor_var_reset() {
     { int __Vi0=0; for (; __Vi0<32; ++__Vi0) {
             top__DOT__cpu__DOT__cpuregs[__Vi0] = VL_RAND_RESET_I(32);
     }}
+    top__DOT__cpu__DOT__pcpi_mul_wr = VL_RAND_RESET_I(1);
+    top__DOT__cpu__DOT__pcpi_mul_rd = VL_RAND_RESET_I(32);
+    top__DOT__cpu__DOT__pcpi_mul_wait = VL_RAND_RESET_I(1);
+    top__DOT__cpu__DOT__pcpi_mul_ready = VL_RAND_RESET_I(1);
+    top__DOT__cpu__DOT__pcpi_int_wr = VL_RAND_RESET_I(1);
+    top__DOT__cpu__DOT__pcpi_int_rd = VL_RAND_RESET_I(32);
+    top__DOT__cpu__DOT__pcpi_int_ready = VL_RAND_RESET_I(1);
     top__DOT__cpu__DOT__mem_state = VL_RAND_RESET_I(2);
     top__DOT__cpu__DOT__mem_wordsize = VL_RAND_RESET_I(2);
     top__DOT__cpu__DOT__mem_rdata_word = VL_RAND_RESET_I(32);
@@ -417,6 +914,7 @@ void Vtop::_ctor_var_reset() {
     top__DOT__cpu__DOT__instr_rdcycleh = VL_RAND_RESET_I(1);
     top__DOT__cpu__DOT__instr_rdinstr = VL_RAND_RESET_I(1);
     top__DOT__cpu__DOT__instr_rdinstrh = VL_RAND_RESET_I(1);
+    top__DOT__cpu__DOT__instr_ecall_ebreak = VL_RAND_RESET_I(1);
     top__DOT__cpu__DOT__instr_fence = VL_RAND_RESET_I(1);
     top__DOT__cpu__DOT__instr_getq = VL_RAND_RESET_I(1);
     top__DOT__cpu__DOT__instr_setq = VL_RAND_RESET_I(1);
@@ -460,6 +958,8 @@ void Vtop::_ctor_var_reset() {
     top__DOT__cpu__DOT__latched_is_lb = VL_RAND_RESET_I(1);
     top__DOT__cpu__DOT__latched_rd = VL_RAND_RESET_I(5);
     top__DOT__cpu__DOT__current_pc = VL_RAND_RESET_I(32);
+    top__DOT__cpu__DOT__pcpi_timeout_counter = VL_RAND_RESET_I(4);
+    top__DOT__cpu__DOT__pcpi_timeout = VL_RAND_RESET_I(1);
     top__DOT__cpu__DOT__do_waitirq = VL_RAND_RESET_I(1);
     top__DOT__cpu__DOT__alu_out = VL_RAND_RESET_I(32);
     top__DOT__cpu__DOT__alu_out_q = VL_RAND_RESET_I(32);
@@ -471,4 +971,33 @@ void Vtop::_ctor_var_reset() {
     top__DOT__cpu__DOT__cpuregs_wrdata = VL_RAND_RESET_I(32);
     top__DOT__cpu__DOT__cpuregs_rs1 = VL_RAND_RESET_I(32);
     top__DOT__cpu__DOT__cpuregs_rs2 = VL_RAND_RESET_I(32);
+    top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__instr_mul = VL_RAND_RESET_I(1);
+    top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__instr_mulh = VL_RAND_RESET_I(1);
+    top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__instr_mulhsu = VL_RAND_RESET_I(1);
+    top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__instr_mulhu = VL_RAND_RESET_I(1);
+    top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__instr_any_mulh = VL_RAND_RESET_I(1);
+    top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__pcpi_wait_q = VL_RAND_RESET_I(1);
+    top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__rs1 = VL_RAND_RESET_Q(64);
+    top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__rs2 = VL_RAND_RESET_Q(64);
+    top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__rd = VL_RAND_RESET_Q(64);
+    top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__rdx = VL_RAND_RESET_Q(64);
+    top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rs1 = VL_RAND_RESET_Q(64);
+    top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rs2 = VL_RAND_RESET_Q(64);
+    top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__this_rs2 = VL_RAND_RESET_Q(64);
+    top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd = VL_RAND_RESET_Q(64);
+    top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdx = VL_RAND_RESET_Q(64);
+    top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdt = VL_RAND_RESET_Q(64);
+    top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__mul_counter = VL_RAND_RESET_I(7);
+    top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__mul_waiting = VL_RAND_RESET_I(1);
+    top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__mul_finish = VL_RAND_RESET_I(1);
+    top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap1 = VL_RAND_RESET_I(1);
+    top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap2 = VL_RAND_RESET_I(4);
+    top__DOT__my_accel__DOT__p0 = VL_RAND_RESET_I(16);
+    top__DOT__my_accel__DOT__p1 = VL_RAND_RESET_I(16);
+    top__DOT__my_accel__DOT__p2 = VL_RAND_RESET_I(16);
+    top__DOT__my_accel__DOT__p3 = VL_RAND_RESET_I(16);
+    top__DOT__my_accel__DOT__p4 = VL_RAND_RESET_I(16);
+    top__DOT__my_accel__DOT__p5 = VL_RAND_RESET_I(16);
+    top__DOT__my_accel__DOT__p6 = VL_RAND_RESET_I(16);
+    top__DOT__my_accel__DOT__p7 = VL_RAND_RESET_I(16);
 }

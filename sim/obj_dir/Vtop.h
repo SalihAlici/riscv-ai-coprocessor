@@ -32,14 +32,21 @@ VL_MODULE(Vtop) {
     // Anonymous structures to workaround compiler member-count bugs
     struct {
         CData/*0:0*/ top__DOT__mem_valid;
-        CData/*0:0*/ top__DOT__mem_instr;
         CData/*0:0*/ top__DOT__mem_ready;
         CData/*3:0*/ top__DOT__mem_wstrb;
         CData/*0:0*/ top__DOT__trap_signal;
+        CData/*0:0*/ top__DOT__pcpi_valid;
+        CData/*0:0*/ top__DOT__pcpi_wr;
+        CData/*0:0*/ top__DOT__pcpi_ready;
         CData/*0:0*/ top__DOT__cpu__DOT__mem_la_read;
         CData/*0:0*/ top__DOT__cpu__DOT__mem_la_write;
         CData/*3:0*/ top__DOT__cpu__DOT__mem_la_wstrb;
         CData/*4:0*/ top__DOT__cpu__DOT__reg_sh;
+        CData/*0:0*/ top__DOT__cpu__DOT__pcpi_mul_wr;
+        CData/*0:0*/ top__DOT__cpu__DOT__pcpi_mul_wait;
+        CData/*0:0*/ top__DOT__cpu__DOT__pcpi_mul_ready;
+        CData/*0:0*/ top__DOT__cpu__DOT__pcpi_int_wr;
+        CData/*0:0*/ top__DOT__cpu__DOT__pcpi_int_ready;
         CData/*1:0*/ top__DOT__cpu__DOT__mem_state;
         CData/*1:0*/ top__DOT__cpu__DOT__mem_wordsize;
         CData/*0:0*/ top__DOT__cpu__DOT__mem_do_prefetch;
@@ -88,15 +95,16 @@ VL_MODULE(Vtop) {
         CData/*0:0*/ top__DOT__cpu__DOT__instr_rdcycle;
         CData/*0:0*/ top__DOT__cpu__DOT__instr_rdcycleh;
         CData/*0:0*/ top__DOT__cpu__DOT__instr_rdinstr;
+    };
+    struct {
         CData/*0:0*/ top__DOT__cpu__DOT__instr_rdinstrh;
+        CData/*0:0*/ top__DOT__cpu__DOT__instr_ecall_ebreak;
         CData/*0:0*/ top__DOT__cpu__DOT__instr_fence;
         CData/*0:0*/ top__DOT__cpu__DOT__instr_getq;
         CData/*0:0*/ top__DOT__cpu__DOT__instr_setq;
         CData/*0:0*/ top__DOT__cpu__DOT__instr_maskirq;
         CData/*0:0*/ top__DOT__cpu__DOT__instr_waitirq;
         CData/*0:0*/ top__DOT__cpu__DOT__instr_timer;
-    };
-    struct {
         CData/*0:0*/ top__DOT__cpu__DOT__instr_trap;
         CData/*4:0*/ top__DOT__cpu__DOT__decoded_rd;
         CData/*4:0*/ top__DOT__cpu__DOT__decoded_rs1;
@@ -131,15 +139,38 @@ VL_MODULE(Vtop) {
         CData/*0:0*/ top__DOT__cpu__DOT__latched_is_lh;
         CData/*0:0*/ top__DOT__cpu__DOT__latched_is_lb;
         CData/*4:0*/ top__DOT__cpu__DOT__latched_rd;
+        CData/*3:0*/ top__DOT__cpu__DOT__pcpi_timeout_counter;
+        CData/*0:0*/ top__DOT__cpu__DOT__pcpi_timeout;
         CData/*0:0*/ top__DOT__cpu__DOT__do_waitirq;
         CData/*0:0*/ top__DOT__cpu__DOT__alu_out_0;
         CData/*0:0*/ top__DOT__cpu__DOT__alu_eq;
         CData/*0:0*/ top__DOT__cpu__DOT__alu_ltu;
         CData/*0:0*/ top__DOT__cpu__DOT__alu_lts;
         CData/*0:0*/ top__DOT__cpu__DOT__cpuregs_write;
+        CData/*0:0*/ top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__instr_mul;
+        CData/*0:0*/ top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__instr_mulh;
+        CData/*0:0*/ top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__instr_mulhsu;
+        CData/*0:0*/ top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__instr_mulhu;
+        CData/*0:0*/ top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__instr_any_mulh;
+        CData/*0:0*/ top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__pcpi_wait_q;
+        CData/*6:0*/ top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__mul_counter;
+        CData/*0:0*/ top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__mul_waiting;
+        CData/*0:0*/ top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__mul_finish;
+        SData/*15:0*/ top__DOT__my_accel__DOT__p0;
+        SData/*15:0*/ top__DOT__my_accel__DOT__p1;
+        SData/*15:0*/ top__DOT__my_accel__DOT__p2;
+        SData/*15:0*/ top__DOT__my_accel__DOT__p3;
+        SData/*15:0*/ top__DOT__my_accel__DOT__p4;
+    };
+    struct {
+        SData/*15:0*/ top__DOT__my_accel__DOT__p5;
+        SData/*15:0*/ top__DOT__my_accel__DOT__p6;
+        SData/*15:0*/ top__DOT__my_accel__DOT__p7;
         IData/*31:0*/ top__DOT__mem_addr;
         IData/*31:0*/ top__DOT__mem_wdata;
         IData/*31:0*/ top__DOT__mem_rdata;
+        IData/*31:0*/ top__DOT__pcpi_insn;
+        IData/*31:0*/ top__DOT__pcpi_rd;
         IData/*31:0*/ top__DOT__cpu__DOT__mem_la_wdata;
         IData/*31:0*/ top__DOT__cpu__DOT__reg_pc;
         IData/*31:0*/ top__DOT__cpu__DOT__reg_next_pc;
@@ -148,6 +179,8 @@ VL_MODULE(Vtop) {
         IData/*31:0*/ top__DOT__cpu__DOT__reg_out;
         IData/*31:0*/ top__DOT__cpu__DOT__next_pc;
         IData/*31:0*/ top__DOT__cpu__DOT__timer;
+        IData/*31:0*/ top__DOT__cpu__DOT__pcpi_mul_rd;
+        IData/*31:0*/ top__DOT__cpu__DOT__pcpi_int_rd;
         IData/*31:0*/ top__DOT__cpu__DOT__mem_rdata_word;
         IData/*31:0*/ top__DOT__cpu__DOT__mem_rdata_q;
         IData/*31:0*/ top__DOT__cpu__DOT__mem_rdata_latched_noshuffle;
@@ -161,14 +194,24 @@ VL_MODULE(Vtop) {
         IData/*31:0*/ top__DOT__cpu__DOT__cpuregs_rs2;
         QData/*63:0*/ top__DOT__cpu__DOT__count_cycle;
         QData/*63:0*/ top__DOT__cpu__DOT__count_instr;
-    };
-    struct {
+        QData/*63:0*/ top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__rs1;
+        QData/*63:0*/ top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__rs2;
+        QData/*63:0*/ top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__rd;
+        QData/*63:0*/ top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__rdx;
+        QData/*63:0*/ top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rs1;
+        QData/*63:0*/ top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rs2;
+        QData/*63:0*/ top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__this_rs2;
+        QData/*63:0*/ top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd;
+        QData/*63:0*/ top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdx;
+        QData/*63:0*/ top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdt;
         IData/*31:0*/ top__DOT__memory[4096];
         IData/*31:0*/ top__DOT__cpu__DOT__cpuregs[32];
     };
     
     // LOCAL VARIABLES
     // Internals; generally not touched by application code
+    CData/*0:0*/ top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap1;
+    CData/*3:0*/ top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap2;
     CData/*0:0*/ __Vclklast__TOP__clk;
     
     // INTERNAL VARIABLES
