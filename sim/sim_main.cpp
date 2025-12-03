@@ -1,8 +1,8 @@
-// sim/sim_main.cpp - PROFESYONEL RAPORLAMA MODU
+// sim/sim_main.cpp - NEGATIF SAYI GOSTEREN SURUM
 #include "Vtop.h"
 #include "verilated.h"
 #include <iostream>
-#include <iomanip> // Tablo hizalaması için
+#include <iomanip> // std::setw için
 
 int main(int argc, char** argv) {
     Verilated::commandArgs(argc, argv);
@@ -11,67 +11,33 @@ int main(int argc, char** argv) {
     top->clk = 0;
     top->resetn = 0;
 
-    // Sonuçları saklamak için değişkenler
-    int sw_result = 0;
-    int sw_time = 0;
-    int hw_result = 0;
-    int hw_time = 0;
-    
-    int state = 0; // 0:Başlamadı, 1:SW Sonuç, 2:SW Süre, 3:HW Sonuç, 4:HW Süre
-
     // 200.000 Cycle çalıştır
     for (int i = 0; i < 200000; i++) {
         top->clk = !top->clk;
         if (i > 50) top->resetn = 1;
         top->eval();
 
-        // İşlemciden veri geldiğinde yakala ve sakla
+        // Çıktı yakalama
         if (top->clk == 1 && top->out_valid == 1) {
-            int val = (int)top->out_data;
+            
+            // --- KRİTİK NOKTA BURASI ---
+            // Verilator çıktıyı 'unsigned' (işaretsiz) verir.
+            // Biz onu zorla 'int32_t' (işaretli) yapıyoruz.
+            int32_t val = (int32_t)top->out_data; 
 
-            if (val == 9999) { state = 1; }      // Test Başladı
-            else if (val == 7777) { state = 3; } // Ayraç (Donanıma geçiş)
+            // Özel sinyalleri ayırt et
+            if (val == 9999) {
+                std::cout << "--- TEST BASLIYOR ---" << std::endl;
+            } 
+            else if (val == 7777) {
+                std::cout << "--- TEST BITTI ---" << std::endl;
+            }
             else {
-                // Gelen veriyi duruma göre kaydet
-                if (state == 1) { sw_result = val; state = 2; }
-                else if (state == 2) { sw_time = val; }
-                else if (state == 3) { hw_result = val; state = 4; }
-                else if (state == 4) { hw_time = val; }
+                // Sayıyı hem normal hem de yanına açıklama ile basalım
+                std::cout << "OUTPUT: " << val << std::endl;
             }
         }
     }
-
-    // --- SIMULASYON BITTI, RAPORU YAZDIR ---
-    
-    // Hızlanma Hesabı
-    double speedup = (double)sw_time / (double)hw_time;
-
-    std::cout << "\n";
-    std::cout << "================================================================" << std::endl;
-    std::cout << "   RISC-V INT4 AI HIZLANDIRICI - PERFORMANS BENCHMARK RAPORU    " << std::endl;
-    std::cout << "================================================================" << std::endl;
-    std::cout << " Test Senaryosu  : 8-Elemanli Nokta Carpimi (Dot Product)" << std::endl;
-    std::cout << " Veri Tipi       : INT4 (4-bit Tamsayi SIMD)" << std::endl;
-    std::cout << "----------------------------------------------------------------" << std::endl;
-    std::cout << std::left << std::setw(25) << " METRIK" 
-              << std::left << std::setw(20) << "| YAZILIM (CPU)" 
-              << std::left << std::setw(20) << "| DONANIM (ACCEL)" << std::endl;
-    std::cout << "-------------------------|-------------------|------------------" << std::endl;
-    
-    std::cout << std::left << std::setw(25) << " Islem Sonucu" 
-              << "| " << std::setw(17) << sw_result 
-              << "| " << std::setw(18) << hw_result << std::endl;
-
-    std::cout << std::left << std::setw(25) << " Gecen Sure (Cycle)" 
-              << "| " << std::setw(17) << sw_time 
-              << "| " << std::setw(18) << hw_time << std::endl;
-              
-    std::cout << "----------------------------------------------------------------" << std::endl;
-    std::cout << " >> SONUC: Donanim Hizlandirici " 
-              << std::fixed << std::setprecision(2) << speedup 
-              << " KAT daha hizlidir." << std::endl;
-    std::cout << "================================================================" << std::endl;
-    std::cout << "\n";
 
     delete top;
     return 0;

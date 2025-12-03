@@ -156,21 +156,13 @@ VL_MODULE(Vtop) {
         CData/*6:0*/ top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__mul_counter;
         CData/*0:0*/ top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__mul_waiting;
         CData/*0:0*/ top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__mul_finish;
-        SData/*15:0*/ top__DOT__my_accel__DOT__p0;
-        SData/*15:0*/ top__DOT__my_accel__DOT__p1;
-        SData/*15:0*/ top__DOT__my_accel__DOT__p2;
-        SData/*15:0*/ top__DOT__my_accel__DOT__p3;
-        SData/*15:0*/ top__DOT__my_accel__DOT__p4;
-    };
-    struct {
-        SData/*15:0*/ top__DOT__my_accel__DOT__p5;
-        SData/*15:0*/ top__DOT__my_accel__DOT__p6;
-        SData/*15:0*/ top__DOT__my_accel__DOT__p7;
         IData/*31:0*/ top__DOT__mem_addr;
         IData/*31:0*/ top__DOT__mem_wdata;
         IData/*31:0*/ top__DOT__mem_rdata;
         IData/*31:0*/ top__DOT__pcpi_insn;
         IData/*31:0*/ top__DOT__pcpi_rd;
+    };
+    struct {
         IData/*31:0*/ top__DOT__cpu__DOT__mem_la_wdata;
         IData/*31:0*/ top__DOT__cpu__DOT__reg_pc;
         IData/*31:0*/ top__DOT__cpu__DOT__reg_next_pc;
@@ -206,13 +198,50 @@ VL_MODULE(Vtop) {
         QData/*63:0*/ top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdt;
         IData/*31:0*/ top__DOT__memory[4096];
         IData/*31:0*/ top__DOT__cpu__DOT__cpuregs[32];
+        CData/*3:0*/ top__DOT__my_accel__DOT__a_raw[8];
+        CData/*3:0*/ top__DOT__my_accel__DOT__b_raw[8];
+        SData/*11:0*/ top__DOT__my_accel__DOT__a_val[8];
+        SData/*11:0*/ top__DOT__my_accel__DOT__b_val[8];
+        IData/*23:0*/ top__DOT__my_accel__DOT__prod[8];
     };
     
     // LOCAL VARIABLES
     // Internals; generally not touched by application code
     CData/*0:0*/ top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap1;
     CData/*3:0*/ top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT____Vconcswap2;
+    CData/*3:0*/ __Vfunc_top__DOT__my_accel__DOT__fp4_decode__13__fp4;
+    CData/*3:0*/ __Vfunc_top__DOT__my_accel__DOT__fp4_decode__14__fp4;
+    CData/*3:0*/ __Vfunc_top__DOT__my_accel__DOT__fp4_decode__15__fp4;
+    CData/*3:0*/ __Vfunc_top__DOT__my_accel__DOT__fp4_decode__16__fp4;
+    CData/*3:0*/ __Vfunc_top__DOT__my_accel__DOT__fp4_decode__17__fp4;
+    CData/*3:0*/ __Vfunc_top__DOT__my_accel__DOT__fp4_decode__18__fp4;
+    CData/*3:0*/ __Vfunc_top__DOT__my_accel__DOT__fp4_decode__19__fp4;
+    CData/*3:0*/ __Vfunc_top__DOT__my_accel__DOT__fp4_decode__20__fp4;
+    CData/*3:0*/ __Vfunc_top__DOT__my_accel__DOT__fp4_decode__21__fp4;
+    CData/*3:0*/ __Vfunc_top__DOT__my_accel__DOT__fp4_decode__22__fp4;
+    CData/*3:0*/ __Vfunc_top__DOT__my_accel__DOT__fp4_decode__23__fp4;
+    CData/*3:0*/ __Vfunc_top__DOT__my_accel__DOT__fp4_decode__24__fp4;
+    CData/*3:0*/ __Vfunc_top__DOT__my_accel__DOT__fp4_decode__25__fp4;
+    CData/*3:0*/ __Vfunc_top__DOT__my_accel__DOT__fp4_decode__26__fp4;
+    CData/*3:0*/ __Vfunc_top__DOT__my_accel__DOT__fp4_decode__27__fp4;
+    CData/*3:0*/ __Vfunc_top__DOT__my_accel__DOT__fp4_decode__28__fp4;
     CData/*0:0*/ __Vclklast__TOP__clk;
+    SData/*11:0*/ __Vfunc_top__DOT__my_accel__DOT__fp4_decode__13__Vfuncout;
+    SData/*11:0*/ __Vfunc_top__DOT__my_accel__DOT__fp4_decode__14__Vfuncout;
+    SData/*11:0*/ __Vfunc_top__DOT__my_accel__DOT__fp4_decode__15__Vfuncout;
+    SData/*11:0*/ __Vfunc_top__DOT__my_accel__DOT__fp4_decode__16__Vfuncout;
+    SData/*11:0*/ __Vfunc_top__DOT__my_accel__DOT__fp4_decode__17__Vfuncout;
+    SData/*11:0*/ __Vfunc_top__DOT__my_accel__DOT__fp4_decode__18__Vfuncout;
+    SData/*11:0*/ __Vfunc_top__DOT__my_accel__DOT__fp4_decode__19__Vfuncout;
+    SData/*11:0*/ __Vfunc_top__DOT__my_accel__DOT__fp4_decode__20__Vfuncout;
+    SData/*11:0*/ __Vfunc_top__DOT__my_accel__DOT__fp4_decode__21__Vfuncout;
+    SData/*11:0*/ __Vfunc_top__DOT__my_accel__DOT__fp4_decode__22__Vfuncout;
+    SData/*11:0*/ __Vfunc_top__DOT__my_accel__DOT__fp4_decode__23__Vfuncout;
+    SData/*11:0*/ __Vfunc_top__DOT__my_accel__DOT__fp4_decode__24__Vfuncout;
+    SData/*11:0*/ __Vfunc_top__DOT__my_accel__DOT__fp4_decode__25__Vfuncout;
+    SData/*11:0*/ __Vfunc_top__DOT__my_accel__DOT__fp4_decode__26__Vfuncout;
+    SData/*11:0*/ __Vfunc_top__DOT__my_accel__DOT__fp4_decode__27__Vfuncout;
+    SData/*11:0*/ __Vfunc_top__DOT__my_accel__DOT__fp4_decode__28__Vfuncout;
     
     // INTERNAL VARIABLES
     // Internals; generally not touched by application code

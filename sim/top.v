@@ -83,7 +83,7 @@ module top (
                 out_valid <= 1;
                 mem_ready <= 1;
                 // Clean Output for Report
-                $display("OUTPUT: %d", mem_wdata);
+              //  $display("OUTPUT: %d", mem_wdata);
             end
             // Normal Memory Access
             else if (mem_addr < 32'h0000_4000) begin

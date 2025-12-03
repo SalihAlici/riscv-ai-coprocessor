@@ -142,6 +142,11 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__1(Vtop__Syms* __restrict vlSymsp) {
     __Vdly__top__DOT__cpu__DOT__reg_op1 = vlTOPp->top__DOT__cpu__DOT__reg_op1;
     __Vdly__top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__mul_counter 
         = vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__mul_counter;
+    if (VL_UNLIKELY(vlTOPp->top__DOT__trap_signal)) {
+        VL_WRITEF("!!! CRITICAL ERROR: CPU TRAP (HALTED) !!!\n");
+        VL_WRITEF("Last Address: %x\n",32,vlTOPp->top__DOT__mem_addr);
+        VL_FINISH_MT("top.v", 67, "");
+    }
     if (((IData)(vlTOPp->top__DOT__cpu__DOT__mem_do_rinst) 
          & (IData)(vlTOPp->top__DOT__cpu__DOT__mem_done))) {
         vlTOPp->top__DOT__cpu__DOT__decoded_rs1 = (0x1fU 
@@ -178,65 +183,6 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__1(Vtop__Syms* __restrict vlSymsp) {
          & (0xbU == (0x7fU & vlTOPp->top__DOT__pcpi_insn)))) {
         vlTOPp->top__DOT__pcpi_ready = 1U;
     }
-    if ((((IData)(vlTOPp->resetn) & (IData)(vlTOPp->top__DOT__pcpi_valid)) 
-         & (0xbU == (0x7fU & vlTOPp->top__DOT__pcpi_insn)))) {
-        vlTOPp->top__DOT__pcpi_rd = (((((((((0xffff0000U 
-                                             & ((- (IData)(
-                                                           (1U 
-                                                            & ((IData)(vlTOPp->top__DOT__my_accel__DOT__p0) 
-                                                               >> 0xfU)))) 
-                                                << 0x10U)) 
-                                            | (IData)(vlTOPp->top__DOT__my_accel__DOT__p0)) 
-                                           + ((0xffff0000U 
-                                               & ((- (IData)(
-                                                             (1U 
-                                                              & ((IData)(vlTOPp->top__DOT__my_accel__DOT__p1) 
-                                                                 >> 0xfU)))) 
-                                                  << 0x10U)) 
-                                              | (IData)(vlTOPp->top__DOT__my_accel__DOT__p1))) 
-                                          + ((0xffff0000U 
-                                              & ((- (IData)(
-                                                            (1U 
-                                                             & ((IData)(vlTOPp->top__DOT__my_accel__DOT__p2) 
-                                                                >> 0xfU)))) 
-                                                 << 0x10U)) 
-                                             | (IData)(vlTOPp->top__DOT__my_accel__DOT__p2))) 
-                                         + ((0xffff0000U 
-                                             & ((- (IData)(
-                                                           (1U 
-                                                            & ((IData)(vlTOPp->top__DOT__my_accel__DOT__p3) 
-                                                               >> 0xfU)))) 
-                                                << 0x10U)) 
-                                            | (IData)(vlTOPp->top__DOT__my_accel__DOT__p3))) 
-                                        + ((0xffff0000U 
-                                            & ((- (IData)(
-                                                          (1U 
-                                                           & ((IData)(vlTOPp->top__DOT__my_accel__DOT__p4) 
-                                                              >> 0xfU)))) 
-                                               << 0x10U)) 
-                                           | (IData)(vlTOPp->top__DOT__my_accel__DOT__p4))) 
-                                       + ((0xffff0000U 
-                                           & ((- (IData)(
-                                                         (1U 
-                                                          & ((IData)(vlTOPp->top__DOT__my_accel__DOT__p5) 
-                                                             >> 0xfU)))) 
-                                              << 0x10U)) 
-                                          | (IData)(vlTOPp->top__DOT__my_accel__DOT__p5))) 
-                                      + ((0xffff0000U 
-                                          & ((- (IData)(
-                                                        (1U 
-                                                         & ((IData)(vlTOPp->top__DOT__my_accel__DOT__p6) 
-                                                            >> 0xfU)))) 
-                                             << 0x10U)) 
-                                         | (IData)(vlTOPp->top__DOT__my_accel__DOT__p6))) 
-                                     + ((0xffff0000U 
-                                         & ((- (IData)(
-                                                       (1U 
-                                                        & ((IData)(vlTOPp->top__DOT__my_accel__DOT__p7) 
-                                                           >> 0xfU)))) 
-                                            << 0x10U)) 
-                                        | (IData)(vlTOPp->top__DOT__my_accel__DOT__p7)));
-    }
     if (((IData)(vlTOPp->top__DOT__cpu__DOT__decoder_trigger) 
          & (~ (IData)(vlTOPp->top__DOT__cpu__DOT__decoder_pseudo_trigger)))) {
         vlTOPp->top__DOT__cpu__DOT__instr_fence = (
@@ -253,6 +199,33 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__1(Vtop__Syms* __restrict vlSymsp) {
     }
     if ((1U & (~ (IData)(vlTOPp->resetn)))) {
         vlTOPp->top__DOT__cpu__DOT__instr_fence = 0U;
+    }
+    if ((((IData)(vlTOPp->resetn) & (IData)(vlTOPp->top__DOT__pcpi_valid)) 
+         & (0xbU == (0x7fU & vlTOPp->top__DOT__pcpi_insn)))) {
+        vlTOPp->top__DOT__pcpi_rd = (((((((VL_EXTENDS_II(32,24, 
+                                                         vlTOPp->top__DOT__my_accel__DOT__prod
+                                                         [0U]) 
+                                           + VL_EXTENDS_II(32,24, 
+                                                           vlTOPp->top__DOT__my_accel__DOT__prod
+                                                           [1U])) 
+                                          + VL_EXTENDS_II(32,24, 
+                                                          vlTOPp->top__DOT__my_accel__DOT__prod
+                                                          [2U])) 
+                                         + VL_EXTENDS_II(32,24, 
+                                                         vlTOPp->top__DOT__my_accel__DOT__prod
+                                                         [3U])) 
+                                        + VL_EXTENDS_II(32,24, 
+                                                        vlTOPp->top__DOT__my_accel__DOT__prod
+                                                        [4U])) 
+                                       + VL_EXTENDS_II(32,24, 
+                                                       vlTOPp->top__DOT__my_accel__DOT__prod
+                                                       [5U])) 
+                                      + VL_EXTENDS_II(32,24, 
+                                                      vlTOPp->top__DOT__my_accel__DOT__prod
+                                                      [6U])) 
+                                     + VL_EXTENDS_II(32,24, 
+                                                     vlTOPp->top__DOT__my_accel__DOT__prod
+                                                     [7U]));
     }
     if ((((IData)(vlTOPp->resetn) & (IData)(vlTOPp->top__DOT__cpu__DOT__cpuregs_write)) 
          & (0U != (IData)(vlTOPp->top__DOT__cpu__DOT__latched_rd)))) {
@@ -1238,6 +1211,29 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__1(Vtop__Syms* __restrict vlSymsp) {
          & (IData)(vlTOPp->top__DOT__cpu__DOT__mem_done))) {
         vlTOPp->top__DOT__cpu__DOT__compressed_instr = 0U;
     }
+    vlTOPp->top__DOT__my_accel__DOT__b_raw[0U] = (0xfU 
+                                                  & vlTOPp->top__DOT__cpu__DOT__reg_op2);
+    vlTOPp->top__DOT__my_accel__DOT__b_raw[1U] = (0xfU 
+                                                  & (vlTOPp->top__DOT__cpu__DOT__reg_op2 
+                                                     >> 4U));
+    vlTOPp->top__DOT__my_accel__DOT__b_raw[2U] = (0xfU 
+                                                  & (vlTOPp->top__DOT__cpu__DOT__reg_op2 
+                                                     >> 8U));
+    vlTOPp->top__DOT__my_accel__DOT__b_raw[3U] = (0xfU 
+                                                  & (vlTOPp->top__DOT__cpu__DOT__reg_op2 
+                                                     >> 0xcU));
+    vlTOPp->top__DOT__my_accel__DOT__b_raw[4U] = (0xfU 
+                                                  & (vlTOPp->top__DOT__cpu__DOT__reg_op2 
+                                                     >> 0x10U));
+    vlTOPp->top__DOT__my_accel__DOT__b_raw[5U] = (0xfU 
+                                                  & (vlTOPp->top__DOT__cpu__DOT__reg_op2 
+                                                     >> 0x14U));
+    vlTOPp->top__DOT__my_accel__DOT__b_raw[6U] = (0xfU 
+                                                  & (vlTOPp->top__DOT__cpu__DOT__reg_op2 
+                                                     >> 0x18U));
+    vlTOPp->top__DOT__my_accel__DOT__b_raw[7U] = (0xfU 
+                                                  & (vlTOPp->top__DOT__cpu__DOT__reg_op2 
+                                                     >> 0x1cU));
     if (((IData)(vlTOPp->top__DOT__cpu__DOT__decoder_trigger) 
          & (~ (IData)(vlTOPp->top__DOT__cpu__DOT__decoder_pseudo_trigger)))) {
         vlTOPp->top__DOT__cpu__DOT__instr_ecall_ebreak 
@@ -1301,6 +1297,214 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__1(Vtop__Syms* __restrict vlSymsp) {
     vlTOPp->top__DOT__cpu__DOT__is_lbu_lhu_lw = ((IData)(vlTOPp->top__DOT__cpu__DOT__instr_lbu) 
                                                  | ((IData)(vlTOPp->top__DOT__cpu__DOT__instr_lhu) 
                                                     | (IData)(vlTOPp->top__DOT__cpu__DOT__instr_lw)));
+    vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__14__fp4 
+        = vlTOPp->top__DOT__my_accel__DOT__b_raw[0U];
+    vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__14__Vfuncout 
+        = ((8U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__14__fp4))
+            ? ((4U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__14__fp4))
+                ? ((2U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__14__fp4))
+                    ? ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__14__fp4))
+                        ? 0xfe8U : 0xff0U) : ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__14__fp4))
+                                               ? 0xff4U
+                                               : 0xff8U))
+                : ((2U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__14__fp4))
+                    ? ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__14__fp4))
+                        ? 0xffcU : 0xffeU) : ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__14__fp4))
+                                               ? 0xfffU
+                                               : 0U)))
+            : ((4U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__14__fp4))
+                ? ((2U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__14__fp4))
+                    ? ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__14__fp4))
+                        ? 0x18U : 0x10U) : ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__14__fp4))
+                                             ? 0xcU
+                                             : 8U))
+                : ((2U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__14__fp4))
+                    ? ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__14__fp4))
+                        ? 4U : 2U) : ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__14__fp4))
+                                       ? 1U : 0U))));
+    vlTOPp->top__DOT__my_accel__DOT__b_val[0U] = vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__14__Vfuncout;
+    vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__16__fp4 
+        = vlTOPp->top__DOT__my_accel__DOT__b_raw[1U];
+    vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__16__Vfuncout 
+        = ((8U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__16__fp4))
+            ? ((4U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__16__fp4))
+                ? ((2U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__16__fp4))
+                    ? ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__16__fp4))
+                        ? 0xfe8U : 0xff0U) : ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__16__fp4))
+                                               ? 0xff4U
+                                               : 0xff8U))
+                : ((2U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__16__fp4))
+                    ? ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__16__fp4))
+                        ? 0xffcU : 0xffeU) : ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__16__fp4))
+                                               ? 0xfffU
+                                               : 0U)))
+            : ((4U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__16__fp4))
+                ? ((2U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__16__fp4))
+                    ? ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__16__fp4))
+                        ? 0x18U : 0x10U) : ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__16__fp4))
+                                             ? 0xcU
+                                             : 8U))
+                : ((2U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__16__fp4))
+                    ? ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__16__fp4))
+                        ? 4U : 2U) : ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__16__fp4))
+                                       ? 1U : 0U))));
+    vlTOPp->top__DOT__my_accel__DOT__b_val[1U] = vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__16__Vfuncout;
+    vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__18__fp4 
+        = vlTOPp->top__DOT__my_accel__DOT__b_raw[2U];
+    vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__18__Vfuncout 
+        = ((8U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__18__fp4))
+            ? ((4U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__18__fp4))
+                ? ((2U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__18__fp4))
+                    ? ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__18__fp4))
+                        ? 0xfe8U : 0xff0U) : ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__18__fp4))
+                                               ? 0xff4U
+                                               : 0xff8U))
+                : ((2U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__18__fp4))
+                    ? ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__18__fp4))
+                        ? 0xffcU : 0xffeU) : ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__18__fp4))
+                                               ? 0xfffU
+                                               : 0U)))
+            : ((4U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__18__fp4))
+                ? ((2U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__18__fp4))
+                    ? ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__18__fp4))
+                        ? 0x18U : 0x10U) : ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__18__fp4))
+                                             ? 0xcU
+                                             : 8U))
+                : ((2U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__18__fp4))
+                    ? ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__18__fp4))
+                        ? 4U : 2U) : ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__18__fp4))
+                                       ? 1U : 0U))));
+    vlTOPp->top__DOT__my_accel__DOT__b_val[2U] = vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__18__Vfuncout;
+    vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__20__fp4 
+        = vlTOPp->top__DOT__my_accel__DOT__b_raw[3U];
+    vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__20__Vfuncout 
+        = ((8U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__20__fp4))
+            ? ((4U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__20__fp4))
+                ? ((2U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__20__fp4))
+                    ? ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__20__fp4))
+                        ? 0xfe8U : 0xff0U) : ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__20__fp4))
+                                               ? 0xff4U
+                                               : 0xff8U))
+                : ((2U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__20__fp4))
+                    ? ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__20__fp4))
+                        ? 0xffcU : 0xffeU) : ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__20__fp4))
+                                               ? 0xfffU
+                                               : 0U)))
+            : ((4U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__20__fp4))
+                ? ((2U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__20__fp4))
+                    ? ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__20__fp4))
+                        ? 0x18U : 0x10U) : ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__20__fp4))
+                                             ? 0xcU
+                                             : 8U))
+                : ((2U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__20__fp4))
+                    ? ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__20__fp4))
+                        ? 4U : 2U) : ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__20__fp4))
+                                       ? 1U : 0U))));
+    vlTOPp->top__DOT__my_accel__DOT__b_val[3U] = vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__20__Vfuncout;
+    vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__22__fp4 
+        = vlTOPp->top__DOT__my_accel__DOT__b_raw[4U];
+    vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__22__Vfuncout 
+        = ((8U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__22__fp4))
+            ? ((4U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__22__fp4))
+                ? ((2U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__22__fp4))
+                    ? ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__22__fp4))
+                        ? 0xfe8U : 0xff0U) : ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__22__fp4))
+                                               ? 0xff4U
+                                               : 0xff8U))
+                : ((2U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__22__fp4))
+                    ? ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__22__fp4))
+                        ? 0xffcU : 0xffeU) : ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__22__fp4))
+                                               ? 0xfffU
+                                               : 0U)))
+            : ((4U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__22__fp4))
+                ? ((2U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__22__fp4))
+                    ? ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__22__fp4))
+                        ? 0x18U : 0x10U) : ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__22__fp4))
+                                             ? 0xcU
+                                             : 8U))
+                : ((2U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__22__fp4))
+                    ? ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__22__fp4))
+                        ? 4U : 2U) : ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__22__fp4))
+                                       ? 1U : 0U))));
+    vlTOPp->top__DOT__my_accel__DOT__b_val[4U] = vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__22__Vfuncout;
+    vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__24__fp4 
+        = vlTOPp->top__DOT__my_accel__DOT__b_raw[5U];
+    vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__24__Vfuncout 
+        = ((8U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__24__fp4))
+            ? ((4U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__24__fp4))
+                ? ((2U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__24__fp4))
+                    ? ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__24__fp4))
+                        ? 0xfe8U : 0xff0U) : ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__24__fp4))
+                                               ? 0xff4U
+                                               : 0xff8U))
+                : ((2U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__24__fp4))
+                    ? ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__24__fp4))
+                        ? 0xffcU : 0xffeU) : ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__24__fp4))
+                                               ? 0xfffU
+                                               : 0U)))
+            : ((4U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__24__fp4))
+                ? ((2U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__24__fp4))
+                    ? ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__24__fp4))
+                        ? 0x18U : 0x10U) : ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__24__fp4))
+                                             ? 0xcU
+                                             : 8U))
+                : ((2U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__24__fp4))
+                    ? ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__24__fp4))
+                        ? 4U : 2U) : ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__24__fp4))
+                                       ? 1U : 0U))));
+    vlTOPp->top__DOT__my_accel__DOT__b_val[5U] = vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__24__Vfuncout;
+    vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__26__fp4 
+        = vlTOPp->top__DOT__my_accel__DOT__b_raw[6U];
+    vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__26__Vfuncout 
+        = ((8U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__26__fp4))
+            ? ((4U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__26__fp4))
+                ? ((2U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__26__fp4))
+                    ? ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__26__fp4))
+                        ? 0xfe8U : 0xff0U) : ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__26__fp4))
+                                               ? 0xff4U
+                                               : 0xff8U))
+                : ((2U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__26__fp4))
+                    ? ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__26__fp4))
+                        ? 0xffcU : 0xffeU) : ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__26__fp4))
+                                               ? 0xfffU
+                                               : 0U)))
+            : ((4U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__26__fp4))
+                ? ((2U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__26__fp4))
+                    ? ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__26__fp4))
+                        ? 0x18U : 0x10U) : ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__26__fp4))
+                                             ? 0xcU
+                                             : 8U))
+                : ((2U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__26__fp4))
+                    ? ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__26__fp4))
+                        ? 4U : 2U) : ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__26__fp4))
+                                       ? 1U : 0U))));
+    vlTOPp->top__DOT__my_accel__DOT__b_val[6U] = vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__26__Vfuncout;
+    vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__28__fp4 
+        = vlTOPp->top__DOT__my_accel__DOT__b_raw[7U];
+    vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__28__Vfuncout 
+        = ((8U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__28__fp4))
+            ? ((4U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__28__fp4))
+                ? ((2U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__28__fp4))
+                    ? ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__28__fp4))
+                        ? 0xfe8U : 0xff0U) : ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__28__fp4))
+                                               ? 0xff4U
+                                               : 0xff8U))
+                : ((2U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__28__fp4))
+                    ? ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__28__fp4))
+                        ? 0xffcU : 0xffeU) : ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__28__fp4))
+                                               ? 0xfffU
+                                               : 0U)))
+            : ((4U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__28__fp4))
+                ? ((2U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__28__fp4))
+                    ? ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__28__fp4))
+                        ? 0x18U : 0x10U) : ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__28__fp4))
+                                             ? 0xcU
+                                             : 8U))
+                : ((2U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__28__fp4))
+                    ? ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__28__fp4))
+                        ? 4U : 2U) : ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__28__fp4))
+                                       ? 1U : 0U))));
+    vlTOPp->top__DOT__my_accel__DOT__b_val[7U] = vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__28__Vfuncout;
     vlTOPp->top__DOT__cpu__DOT__pcpi_timeout_counter 
         = __Vdly__top__DOT__cpu__DOT__pcpi_timeout_counter;
     vlTOPp->top__DOT__cpu__DOT__cpuregs_wrdata = 0U;
@@ -1982,15 +2186,9 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__1(Vtop__Syms* __restrict vlSymsp) {
     }
     __Vdly__top__DOT__mem_ready = 0U;
     vlTOPp->out_valid = 0U;
-    if (VL_UNLIKELY(vlTOPp->top__DOT__trap_signal)) {
-        VL_WRITEF("!!! CRITICAL ERROR: CPU TRAP (HALTED) !!!\n");
-        VL_WRITEF("Last Address: %x\n",32,vlTOPp->top__DOT__mem_addr);
-        VL_FINISH_MT("top.v", 67, "");
-    }
     if ((((IData)(vlTOPp->resetn) & (IData)(vlTOPp->top__DOT__mem_valid)) 
          & (~ (IData)(vlTOPp->top__DOT__mem_ready)))) {
-        if (VL_UNLIKELY((0x10000000U == vlTOPp->top__DOT__mem_addr))) {
-            VL_WRITEF("OUTPUT: %10#\n",32,vlTOPp->top__DOT__mem_wdata);
+        if ((0x10000000U == vlTOPp->top__DOT__mem_addr)) {
             vlTOPp->out_data = vlTOPp->top__DOT__mem_wdata;
             vlTOPp->out_valid = 1U;
             __Vdly__top__DOT__mem_ready = 1U;
@@ -2186,100 +2384,6 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__1(Vtop__Syms* __restrict vlSymsp) {
             }
         }
     }
-    vlTOPp->top__DOT__my_accel__DOT__p0 = (0xffffU 
-                                           & VL_MULS_III(16,16,16, 
-                                                         (0xffffU 
-                                                          & VL_EXTENDS_II(16,4, 
-                                                                          (0xfU 
-                                                                           & vlTOPp->top__DOT__cpu__DOT__reg_op1))), 
-                                                         (0xffffU 
-                                                          & VL_EXTENDS_II(16,4, 
-                                                                          (0xfU 
-                                                                           & vlTOPp->top__DOT__cpu__DOT__reg_op2)))));
-    vlTOPp->top__DOT__my_accel__DOT__p1 = (0xffffU 
-                                           & VL_MULS_III(16,16,16, 
-                                                         (0xffffU 
-                                                          & VL_EXTENDS_II(16,4, 
-                                                                          (0xfU 
-                                                                           & (vlTOPp->top__DOT__cpu__DOT__reg_op1 
-                                                                              >> 4U)))), 
-                                                         (0xffffU 
-                                                          & VL_EXTENDS_II(16,4, 
-                                                                          (0xfU 
-                                                                           & (vlTOPp->top__DOT__cpu__DOT__reg_op2 
-                                                                              >> 4U))))));
-    vlTOPp->top__DOT__my_accel__DOT__p2 = (0xffffU 
-                                           & VL_MULS_III(16,16,16, 
-                                                         (0xffffU 
-                                                          & VL_EXTENDS_II(16,4, 
-                                                                          (0xfU 
-                                                                           & (vlTOPp->top__DOT__cpu__DOT__reg_op1 
-                                                                              >> 8U)))), 
-                                                         (0xffffU 
-                                                          & VL_EXTENDS_II(16,4, 
-                                                                          (0xfU 
-                                                                           & (vlTOPp->top__DOT__cpu__DOT__reg_op2 
-                                                                              >> 8U))))));
-    vlTOPp->top__DOT__my_accel__DOT__p3 = (0xffffU 
-                                           & VL_MULS_III(16,16,16, 
-                                                         (0xffffU 
-                                                          & VL_EXTENDS_II(16,4, 
-                                                                          (0xfU 
-                                                                           & (vlTOPp->top__DOT__cpu__DOT__reg_op1 
-                                                                              >> 0xcU)))), 
-                                                         (0xffffU 
-                                                          & VL_EXTENDS_II(16,4, 
-                                                                          (0xfU 
-                                                                           & (vlTOPp->top__DOT__cpu__DOT__reg_op2 
-                                                                              >> 0xcU))))));
-    vlTOPp->top__DOT__my_accel__DOT__p4 = (0xffffU 
-                                           & VL_MULS_III(16,16,16, 
-                                                         (0xffffU 
-                                                          & VL_EXTENDS_II(16,4, 
-                                                                          (0xfU 
-                                                                           & (vlTOPp->top__DOT__cpu__DOT__reg_op1 
-                                                                              >> 0x10U)))), 
-                                                         (0xffffU 
-                                                          & VL_EXTENDS_II(16,4, 
-                                                                          (0xfU 
-                                                                           & (vlTOPp->top__DOT__cpu__DOT__reg_op2 
-                                                                              >> 0x10U))))));
-    vlTOPp->top__DOT__my_accel__DOT__p5 = (0xffffU 
-                                           & VL_MULS_III(16,16,16, 
-                                                         (0xffffU 
-                                                          & VL_EXTENDS_II(16,4, 
-                                                                          (0xfU 
-                                                                           & (vlTOPp->top__DOT__cpu__DOT__reg_op1 
-                                                                              >> 0x14U)))), 
-                                                         (0xffffU 
-                                                          & VL_EXTENDS_II(16,4, 
-                                                                          (0xfU 
-                                                                           & (vlTOPp->top__DOT__cpu__DOT__reg_op2 
-                                                                              >> 0x14U))))));
-    vlTOPp->top__DOT__my_accel__DOT__p6 = (0xffffU 
-                                           & VL_MULS_III(16,16,16, 
-                                                         (0xffffU 
-                                                          & VL_EXTENDS_II(16,4, 
-                                                                          (0xfU 
-                                                                           & (vlTOPp->top__DOT__cpu__DOT__reg_op1 
-                                                                              >> 0x18U)))), 
-                                                         (0xffffU 
-                                                          & VL_EXTENDS_II(16,4, 
-                                                                          (0xfU 
-                                                                           & (vlTOPp->top__DOT__cpu__DOT__reg_op2 
-                                                                              >> 0x18U))))));
-    vlTOPp->top__DOT__my_accel__DOT__p7 = (0xffffU 
-                                           & VL_MULS_III(16,16,16, 
-                                                         (0xffffU 
-                                                          & VL_EXTENDS_II(16,4, 
-                                                                          (0xfU 
-                                                                           & (vlTOPp->top__DOT__cpu__DOT__reg_op1 
-                                                                              >> 0x1cU)))), 
-                                                         (0xffffU 
-                                                          & VL_EXTENDS_II(16,4, 
-                                                                          (0xfU 
-                                                                           & (vlTOPp->top__DOT__cpu__DOT__reg_op2 
-                                                                              >> 0x1cU))))));
     if ((0U == (IData)(vlTOPp->top__DOT__cpu__DOT__mem_wordsize))) {
         vlTOPp->top__DOT__cpu__DOT__mem_rdata_word 
             = vlTOPp->top__DOT__mem_rdata;
@@ -2316,6 +2420,29 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__1(Vtop__Syms* __restrict vlSymsp) {
     vlTOPp->top__DOT__cpu__DOT__alu_lts = VL_LTS_III(1,32,32, vlTOPp->top__DOT__cpu__DOT__reg_op1, vlTOPp->top__DOT__cpu__DOT__reg_op2);
     vlTOPp->top__DOT__cpu__DOT__alu_ltu = (vlTOPp->top__DOT__cpu__DOT__reg_op1 
                                            < vlTOPp->top__DOT__cpu__DOT__reg_op2);
+    vlTOPp->top__DOT__my_accel__DOT__a_raw[0U] = (0xfU 
+                                                  & vlTOPp->top__DOT__cpu__DOT__reg_op1);
+    vlTOPp->top__DOT__my_accel__DOT__a_raw[1U] = (0xfU 
+                                                  & (vlTOPp->top__DOT__cpu__DOT__reg_op1 
+                                                     >> 4U));
+    vlTOPp->top__DOT__my_accel__DOT__a_raw[2U] = (0xfU 
+                                                  & (vlTOPp->top__DOT__cpu__DOT__reg_op1 
+                                                     >> 8U));
+    vlTOPp->top__DOT__my_accel__DOT__a_raw[3U] = (0xfU 
+                                                  & (vlTOPp->top__DOT__cpu__DOT__reg_op1 
+                                                     >> 0xcU));
+    vlTOPp->top__DOT__my_accel__DOT__a_raw[4U] = (0xfU 
+                                                  & (vlTOPp->top__DOT__cpu__DOT__reg_op1 
+                                                     >> 0x10U));
+    vlTOPp->top__DOT__my_accel__DOT__a_raw[5U] = (0xfU 
+                                                  & (vlTOPp->top__DOT__cpu__DOT__reg_op1 
+                                                     >> 0x14U));
+    vlTOPp->top__DOT__my_accel__DOT__a_raw[6U] = (0xfU 
+                                                  & (vlTOPp->top__DOT__cpu__DOT__reg_op1 
+                                                     >> 0x18U));
+    vlTOPp->top__DOT__my_accel__DOT__a_raw[7U] = (0xfU 
+                                                  & (vlTOPp->top__DOT__cpu__DOT__reg_op1 
+                                                     >> 0x1cU));
     vlTOPp->top__DOT__cpu__DOT__mem_rdata_latched_noshuffle 
         = ((IData)(vlTOPp->top__DOT__cpu__DOT__mem_xfer)
             ? vlTOPp->top__DOT__mem_rdata : vlTOPp->top__DOT__cpu__DOT__mem_rdata_q);
@@ -2381,6 +2508,294 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__1(Vtop__Syms* __restrict vlSymsp) {
             }
         }
     }
+    vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__13__fp4 
+        = vlTOPp->top__DOT__my_accel__DOT__a_raw[0U];
+    vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__13__Vfuncout 
+        = ((8U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__13__fp4))
+            ? ((4U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__13__fp4))
+                ? ((2U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__13__fp4))
+                    ? ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__13__fp4))
+                        ? 0xfe8U : 0xff0U) : ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__13__fp4))
+                                               ? 0xff4U
+                                               : 0xff8U))
+                : ((2U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__13__fp4))
+                    ? ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__13__fp4))
+                        ? 0xffcU : 0xffeU) : ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__13__fp4))
+                                               ? 0xfffU
+                                               : 0U)))
+            : ((4U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__13__fp4))
+                ? ((2U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__13__fp4))
+                    ? ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__13__fp4))
+                        ? 0x18U : 0x10U) : ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__13__fp4))
+                                             ? 0xcU
+                                             : 8U))
+                : ((2U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__13__fp4))
+                    ? ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__13__fp4))
+                        ? 4U : 2U) : ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__13__fp4))
+                                       ? 1U : 0U))));
+    vlTOPp->top__DOT__my_accel__DOT__a_val[0U] = vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__13__Vfuncout;
+    vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__15__fp4 
+        = vlTOPp->top__DOT__my_accel__DOT__a_raw[1U];
+    vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__15__Vfuncout 
+        = ((8U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__15__fp4))
+            ? ((4U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__15__fp4))
+                ? ((2U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__15__fp4))
+                    ? ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__15__fp4))
+                        ? 0xfe8U : 0xff0U) : ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__15__fp4))
+                                               ? 0xff4U
+                                               : 0xff8U))
+                : ((2U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__15__fp4))
+                    ? ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__15__fp4))
+                        ? 0xffcU : 0xffeU) : ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__15__fp4))
+                                               ? 0xfffU
+                                               : 0U)))
+            : ((4U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__15__fp4))
+                ? ((2U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__15__fp4))
+                    ? ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__15__fp4))
+                        ? 0x18U : 0x10U) : ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__15__fp4))
+                                             ? 0xcU
+                                             : 8U))
+                : ((2U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__15__fp4))
+                    ? ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__15__fp4))
+                        ? 4U : 2U) : ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__15__fp4))
+                                       ? 1U : 0U))));
+    vlTOPp->top__DOT__my_accel__DOT__a_val[1U] = vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__15__Vfuncout;
+    vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__17__fp4 
+        = vlTOPp->top__DOT__my_accel__DOT__a_raw[2U];
+    vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__17__Vfuncout 
+        = ((8U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__17__fp4))
+            ? ((4U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__17__fp4))
+                ? ((2U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__17__fp4))
+                    ? ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__17__fp4))
+                        ? 0xfe8U : 0xff0U) : ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__17__fp4))
+                                               ? 0xff4U
+                                               : 0xff8U))
+                : ((2U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__17__fp4))
+                    ? ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__17__fp4))
+                        ? 0xffcU : 0xffeU) : ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__17__fp4))
+                                               ? 0xfffU
+                                               : 0U)))
+            : ((4U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__17__fp4))
+                ? ((2U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__17__fp4))
+                    ? ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__17__fp4))
+                        ? 0x18U : 0x10U) : ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__17__fp4))
+                                             ? 0xcU
+                                             : 8U))
+                : ((2U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__17__fp4))
+                    ? ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__17__fp4))
+                        ? 4U : 2U) : ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__17__fp4))
+                                       ? 1U : 0U))));
+    vlTOPp->top__DOT__my_accel__DOT__a_val[2U] = vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__17__Vfuncout;
+    vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__19__fp4 
+        = vlTOPp->top__DOT__my_accel__DOT__a_raw[3U];
+    vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__19__Vfuncout 
+        = ((8U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__19__fp4))
+            ? ((4U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__19__fp4))
+                ? ((2U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__19__fp4))
+                    ? ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__19__fp4))
+                        ? 0xfe8U : 0xff0U) : ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__19__fp4))
+                                               ? 0xff4U
+                                               : 0xff8U))
+                : ((2U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__19__fp4))
+                    ? ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__19__fp4))
+                        ? 0xffcU : 0xffeU) : ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__19__fp4))
+                                               ? 0xfffU
+                                               : 0U)))
+            : ((4U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__19__fp4))
+                ? ((2U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__19__fp4))
+                    ? ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__19__fp4))
+                        ? 0x18U : 0x10U) : ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__19__fp4))
+                                             ? 0xcU
+                                             : 8U))
+                : ((2U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__19__fp4))
+                    ? ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__19__fp4))
+                        ? 4U : 2U) : ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__19__fp4))
+                                       ? 1U : 0U))));
+    vlTOPp->top__DOT__my_accel__DOT__a_val[3U] = vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__19__Vfuncout;
+    vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__21__fp4 
+        = vlTOPp->top__DOT__my_accel__DOT__a_raw[4U];
+    vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__21__Vfuncout 
+        = ((8U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__21__fp4))
+            ? ((4U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__21__fp4))
+                ? ((2U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__21__fp4))
+                    ? ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__21__fp4))
+                        ? 0xfe8U : 0xff0U) : ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__21__fp4))
+                                               ? 0xff4U
+                                               : 0xff8U))
+                : ((2U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__21__fp4))
+                    ? ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__21__fp4))
+                        ? 0xffcU : 0xffeU) : ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__21__fp4))
+                                               ? 0xfffU
+                                               : 0U)))
+            : ((4U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__21__fp4))
+                ? ((2U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__21__fp4))
+                    ? ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__21__fp4))
+                        ? 0x18U : 0x10U) : ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__21__fp4))
+                                             ? 0xcU
+                                             : 8U))
+                : ((2U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__21__fp4))
+                    ? ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__21__fp4))
+                        ? 4U : 2U) : ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__21__fp4))
+                                       ? 1U : 0U))));
+    vlTOPp->top__DOT__my_accel__DOT__a_val[4U] = vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__21__Vfuncout;
+    vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__23__fp4 
+        = vlTOPp->top__DOT__my_accel__DOT__a_raw[5U];
+    vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__23__Vfuncout 
+        = ((8U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__23__fp4))
+            ? ((4U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__23__fp4))
+                ? ((2U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__23__fp4))
+                    ? ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__23__fp4))
+                        ? 0xfe8U : 0xff0U) : ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__23__fp4))
+                                               ? 0xff4U
+                                               : 0xff8U))
+                : ((2U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__23__fp4))
+                    ? ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__23__fp4))
+                        ? 0xffcU : 0xffeU) : ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__23__fp4))
+                                               ? 0xfffU
+                                               : 0U)))
+            : ((4U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__23__fp4))
+                ? ((2U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__23__fp4))
+                    ? ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__23__fp4))
+                        ? 0x18U : 0x10U) : ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__23__fp4))
+                                             ? 0xcU
+                                             : 8U))
+                : ((2U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__23__fp4))
+                    ? ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__23__fp4))
+                        ? 4U : 2U) : ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__23__fp4))
+                                       ? 1U : 0U))));
+    vlTOPp->top__DOT__my_accel__DOT__a_val[5U] = vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__23__Vfuncout;
+    vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__25__fp4 
+        = vlTOPp->top__DOT__my_accel__DOT__a_raw[6U];
+    vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__25__Vfuncout 
+        = ((8U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__25__fp4))
+            ? ((4U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__25__fp4))
+                ? ((2U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__25__fp4))
+                    ? ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__25__fp4))
+                        ? 0xfe8U : 0xff0U) : ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__25__fp4))
+                                               ? 0xff4U
+                                               : 0xff8U))
+                : ((2U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__25__fp4))
+                    ? ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__25__fp4))
+                        ? 0xffcU : 0xffeU) : ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__25__fp4))
+                                               ? 0xfffU
+                                               : 0U)))
+            : ((4U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__25__fp4))
+                ? ((2U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__25__fp4))
+                    ? ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__25__fp4))
+                        ? 0x18U : 0x10U) : ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__25__fp4))
+                                             ? 0xcU
+                                             : 8U))
+                : ((2U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__25__fp4))
+                    ? ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__25__fp4))
+                        ? 4U : 2U) : ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__25__fp4))
+                                       ? 1U : 0U))));
+    vlTOPp->top__DOT__my_accel__DOT__a_val[6U] = vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__25__Vfuncout;
+    vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__27__fp4 
+        = vlTOPp->top__DOT__my_accel__DOT__a_raw[7U];
+    vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__27__Vfuncout 
+        = ((8U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__27__fp4))
+            ? ((4U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__27__fp4))
+                ? ((2U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__27__fp4))
+                    ? ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__27__fp4))
+                        ? 0xfe8U : 0xff0U) : ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__27__fp4))
+                                               ? 0xff4U
+                                               : 0xff8U))
+                : ((2U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__27__fp4))
+                    ? ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__27__fp4))
+                        ? 0xffcU : 0xffeU) : ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__27__fp4))
+                                               ? 0xfffU
+                                               : 0U)))
+            : ((4U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__27__fp4))
+                ? ((2U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__27__fp4))
+                    ? ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__27__fp4))
+                        ? 0x18U : 0x10U) : ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__27__fp4))
+                                             ? 0xcU
+                                             : 8U))
+                : ((2U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__27__fp4))
+                    ? ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__27__fp4))
+                        ? 4U : 2U) : ((1U & (IData)(vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__27__fp4))
+                                       ? 1U : 0U))));
+    vlTOPp->top__DOT__my_accel__DOT__a_val[7U] = vlTOPp->__Vfunc_top__DOT__my_accel__DOT__fp4_decode__27__Vfuncout;
+    vlTOPp->top__DOT__my_accel__DOT__prod[0U] = (0xffffffU 
+                                                 & VL_MULS_III(24,24,24, 
+                                                               (0xffffffU 
+                                                                & VL_EXTENDS_II(24,12, 
+                                                                                vlTOPp->top__DOT__my_accel__DOT__a_val
+                                                                                [0U])), 
+                                                               (0xffffffU 
+                                                                & VL_EXTENDS_II(24,12, 
+                                                                                vlTOPp->top__DOT__my_accel__DOT__b_val
+                                                                                [0U]))));
+    vlTOPp->top__DOT__my_accel__DOT__prod[1U] = (0xffffffU 
+                                                 & VL_MULS_III(24,24,24, 
+                                                               (0xffffffU 
+                                                                & VL_EXTENDS_II(24,12, 
+                                                                                vlTOPp->top__DOT__my_accel__DOT__a_val
+                                                                                [1U])), 
+                                                               (0xffffffU 
+                                                                & VL_EXTENDS_II(24,12, 
+                                                                                vlTOPp->top__DOT__my_accel__DOT__b_val
+                                                                                [1U]))));
+    vlTOPp->top__DOT__my_accel__DOT__prod[2U] = (0xffffffU 
+                                                 & VL_MULS_III(24,24,24, 
+                                                               (0xffffffU 
+                                                                & VL_EXTENDS_II(24,12, 
+                                                                                vlTOPp->top__DOT__my_accel__DOT__a_val
+                                                                                [2U])), 
+                                                               (0xffffffU 
+                                                                & VL_EXTENDS_II(24,12, 
+                                                                                vlTOPp->top__DOT__my_accel__DOT__b_val
+                                                                                [2U]))));
+    vlTOPp->top__DOT__my_accel__DOT__prod[3U] = (0xffffffU 
+                                                 & VL_MULS_III(24,24,24, 
+                                                               (0xffffffU 
+                                                                & VL_EXTENDS_II(24,12, 
+                                                                                vlTOPp->top__DOT__my_accel__DOT__a_val
+                                                                                [3U])), 
+                                                               (0xffffffU 
+                                                                & VL_EXTENDS_II(24,12, 
+                                                                                vlTOPp->top__DOT__my_accel__DOT__b_val
+                                                                                [3U]))));
+    vlTOPp->top__DOT__my_accel__DOT__prod[4U] = (0xffffffU 
+                                                 & VL_MULS_III(24,24,24, 
+                                                               (0xffffffU 
+                                                                & VL_EXTENDS_II(24,12, 
+                                                                                vlTOPp->top__DOT__my_accel__DOT__a_val
+                                                                                [4U])), 
+                                                               (0xffffffU 
+                                                                & VL_EXTENDS_II(24,12, 
+                                                                                vlTOPp->top__DOT__my_accel__DOT__b_val
+                                                                                [4U]))));
+    vlTOPp->top__DOT__my_accel__DOT__prod[5U] = (0xffffffU 
+                                                 & VL_MULS_III(24,24,24, 
+                                                               (0xffffffU 
+                                                                & VL_EXTENDS_II(24,12, 
+                                                                                vlTOPp->top__DOT__my_accel__DOT__a_val
+                                                                                [5U])), 
+                                                               (0xffffffU 
+                                                                & VL_EXTENDS_II(24,12, 
+                                                                                vlTOPp->top__DOT__my_accel__DOT__b_val
+                                                                                [5U]))));
+    vlTOPp->top__DOT__my_accel__DOT__prod[6U] = (0xffffffU 
+                                                 & VL_MULS_III(24,24,24, 
+                                                               (0xffffffU 
+                                                                & VL_EXTENDS_II(24,12, 
+                                                                                vlTOPp->top__DOT__my_accel__DOT__a_val
+                                                                                [6U])), 
+                                                               (0xffffffU 
+                                                                & VL_EXTENDS_II(24,12, 
+                                                                                vlTOPp->top__DOT__my_accel__DOT__b_val
+                                                                                [6U]))));
+    vlTOPp->top__DOT__my_accel__DOT__prod[7U] = (0xffffffU 
+                                                 & VL_MULS_III(24,24,24, 
+                                                               (0xffffffU 
+                                                                & VL_EXTENDS_II(24,12, 
+                                                                                vlTOPp->top__DOT__my_accel__DOT__a_val
+                                                                                [7U])), 
+                                                               (0xffffffU 
+                                                                & VL_EXTENDS_II(24,12, 
+                                                                                vlTOPp->top__DOT__my_accel__DOT__b_val
+                                                                                [7U]))));
 }
 
 VL_INLINE_OPT void Vtop::_combo__TOP__4(Vtop__Syms* __restrict vlSymsp) {
