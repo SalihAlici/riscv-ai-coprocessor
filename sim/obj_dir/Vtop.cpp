@@ -22,6 +22,7 @@ void Vtop::eval_step() {
     QData __Vchange = 1;
     do {
         VL_DEBUG_IF(VL_DBG_MSGF("+ Clock loop\n"););
+        vlSymsp->__Vm_activity = true;
         _eval(vlSymsp);
         if (VL_UNLIKELY(++__VclockLoop > 100)) {
             // About to fail, so enable debug to see what's not settling.
@@ -42,6 +43,7 @@ void Vtop::eval_step() {
 void Vtop::_eval_initial_loop(Vtop__Syms* __restrict vlSymsp) {
     vlSymsp->__Vm_didInit = true;
     _eval_initial(vlSymsp);
+    vlSymsp->__Vm_activity = true;
     // Evaluate till stable
     int __VclockLoop = 0;
     QData __Vchange = 1;
@@ -147,12 +149,55 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__1(Vtop__Syms* __restrict vlSymsp) {
         VL_WRITEF("Last Address: %x\n",32,vlTOPp->top__DOT__mem_addr);
         VL_FINISH_MT("top.v", 67, "");
     }
-    if (((IData)(vlTOPp->top__DOT__cpu__DOT__mem_do_rinst) 
-         & (IData)(vlTOPp->top__DOT__cpu__DOT__mem_done))) {
-        vlTOPp->top__DOT__cpu__DOT__decoded_rs1 = (0x1fU 
-                                                   & (vlTOPp->top__DOT__cpu__DOT__mem_rdata_latched_noshuffle 
-                                                      >> 0xfU));
+    vlTOPp->top__DOT__cpu__DOT__trace_valid = 0U;
+    vlTOPp->top__DOT__cpu__DOT__alu_wait = 0U;
+    vlTOPp->top__DOT__cpu__DOT__trace_data = 0ULL;
+    vlTOPp->top__DOT__cpu__DOT__alu_wait_2 = 0U;
+    if (vlTOPp->top__DOT__cpu__DOT__launch_next_insn) {
+        vlTOPp->top__DOT__cpu__DOT__dbg_insn_addr = vlTOPp->top__DOT__cpu__DOT__next_pc;
     }
+    vlTOPp->top__DOT__cpu__DOT__alu_out_0_q = vlTOPp->top__DOT__cpu__DOT__alu_out_0;
+    if ((1U & (~ (IData)(vlTOPp->resetn)))) {
+        vlTOPp->top__DOT__cpu__DOT__eoi = 0U;
+    }
+    if ((1U & (~ (IData)(vlTOPp->resetn)))) {
+        vlTOPp->top__DOT__cpu__DOT__irq_mask = 0xffffffffU;
+    }
+    if ((1U & (~ (IData)(vlTOPp->resetn)))) {
+        vlTOPp->top__DOT__cpu__DOT__latched_trace = 0U;
+    }
+    vlTOPp->top__DOT__cpu__DOT__q_ascii_instr = vlTOPp->top__DOT__cpu__DOT__dbg_ascii_instr;
+    vlTOPp->top__DOT__cpu__DOT__q_insn_imm = vlTOPp->top__DOT__cpu__DOT__dbg_insn_imm;
+    vlTOPp->top__DOT__cpu__DOT__q_insn_opcode = vlTOPp->top__DOT__cpu__DOT__dbg_insn_opcode;
+    vlTOPp->top__DOT__cpu__DOT__q_insn_rs1 = vlTOPp->top__DOT__cpu__DOT__dbg_insn_rs1;
+    vlTOPp->top__DOT__cpu__DOT__q_insn_rs2 = vlTOPp->top__DOT__cpu__DOT__dbg_insn_rs2;
+    vlTOPp->top__DOT__cpu__DOT__q_insn_rd = vlTOPp->top__DOT__cpu__DOT__dbg_insn_rd;
+    vlTOPp->top__DOT__cpu__DOT__next_irq_pending = 0U;
+    if ((1U & (~ (IData)(vlTOPp->resetn)))) {
+        vlTOPp->top__DOT__cpu__DOT__next_irq_pending = 0U;
+    }
+    vlTOPp->top__DOT__cpu__DOT__irq_pending = vlTOPp->top__DOT__cpu__DOT__next_irq_pending;
+    vlTOPp->top__DOT__cpu__DOT__clear_prefetched_high_word_q 
+        = vlTOPp->top__DOT__cpu__DOT__clear_prefetched_high_word;
+    if ((1U & ((~ (IData)(vlTOPp->resetn)) | (IData)(vlTOPp->top__DOT__trap_signal)))) {
+        vlTOPp->top__DOT__cpu__DOT__dbg_valid_insn = 0U;
+    } else {
+        if (vlTOPp->top__DOT__cpu__DOT__launch_next_insn) {
+            vlTOPp->top__DOT__cpu__DOT__dbg_valid_insn = 1U;
+        }
+    }
+    if ((1U & (~ (IData)(vlTOPp->resetn)))) {
+        vlTOPp->top__DOT__cpu__DOT__irq_state = 0U;
+    }
+    if ((1U & ((~ (IData)(vlTOPp->resetn)) | (IData)(vlTOPp->top__DOT__trap_signal)))) {
+        vlTOPp->top__DOT__cpu__DOT__prefetched_high_word = 0U;
+    }
+    if (vlTOPp->top__DOT__cpu__DOT__clear_prefetched_high_word) {
+        vlTOPp->top__DOT__cpu__DOT__prefetched_high_word = 0U;
+    }
+    vlTOPp->top__DOT__cpu__DOT__dbg_next = vlTOPp->top__DOT__cpu__DOT__launch_next_insn;
+    vlTOPp->top__DOT__cpu__DOT__decoder_pseudo_trigger_q 
+        = vlTOPp->top__DOT__cpu__DOT__decoder_pseudo_trigger;
     if (((IData)(vlTOPp->top__DOT__cpu__DOT__decoder_trigger) 
          & (~ (IData)(vlTOPp->top__DOT__cpu__DOT__decoder_pseudo_trigger)))) {
         vlTOPp->top__DOT__cpu__DOT__instr_setq = 0U;
@@ -173,6 +218,13 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__1(Vtop__Syms* __restrict vlSymsp) {
          & (IData)(vlTOPp->top__DOT__cpu__DOT__mem_done))) {
         vlTOPp->top__DOT__cpu__DOT__instr_waitirq = 0U;
     }
+    if (vlTOPp->resetn) {
+        if ((1U & (~ (IData)(vlTOPp->top__DOT__cpu__DOT__last_mem_valid)))) {
+            vlTOPp->top__DOT__cpu__DOT__mem_la_firstword_reg = 0U;
+        }
+    } else {
+        vlTOPp->top__DOT__cpu__DOT__mem_la_firstword_reg = 0U;
+    }
     vlTOPp->top__DOT__pcpi_wr = 0U;
     if ((((IData)(vlTOPp->resetn) & (IData)(vlTOPp->top__DOT__pcpi_valid)) 
          & (0xbU == (0x7fU & vlTOPp->top__DOT__pcpi_insn)))) {
@@ -182,23 +234,6 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__1(Vtop__Syms* __restrict vlSymsp) {
     if ((((IData)(vlTOPp->resetn) & (IData)(vlTOPp->top__DOT__pcpi_valid)) 
          & (0xbU == (0x7fU & vlTOPp->top__DOT__pcpi_insn)))) {
         vlTOPp->top__DOT__pcpi_ready = 1U;
-    }
-    if (((IData)(vlTOPp->top__DOT__cpu__DOT__decoder_trigger) 
-         & (~ (IData)(vlTOPp->top__DOT__cpu__DOT__decoder_pseudo_trigger)))) {
-        vlTOPp->top__DOT__cpu__DOT__instr_fence = (
-                                                   (0xfU 
-                                                    == 
-                                                    (0x7fU 
-                                                     & vlTOPp->top__DOT__cpu__DOT__mem_rdata_q)) 
-                                                   & (~ (IData)(
-                                                                (0U 
-                                                                 != 
-                                                                 (7U 
-                                                                  & (vlTOPp->top__DOT__cpu__DOT__mem_rdata_q 
-                                                                     >> 0xcU))))));
-    }
-    if ((1U & (~ (IData)(vlTOPp->resetn)))) {
-        vlTOPp->top__DOT__cpu__DOT__instr_fence = 0U;
     }
     if ((((IData)(vlTOPp->resetn) & (IData)(vlTOPp->top__DOT__pcpi_valid)) 
          & (0xbU == (0x7fU & vlTOPp->top__DOT__pcpi_insn)))) {
@@ -227,6 +262,27 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__1(Vtop__Syms* __restrict vlSymsp) {
                                                      vlTOPp->top__DOT__my_accel__DOT__prod
                                                      [7U]));
     }
+    if (((IData)(vlTOPp->top__DOT__cpu__DOT__decoder_trigger) 
+         & (~ (IData)(vlTOPp->top__DOT__cpu__DOT__decoder_pseudo_trigger)))) {
+        vlTOPp->top__DOT__cpu__DOT__instr_fence = (
+                                                   (0xfU 
+                                                    == 
+                                                    (0x7fU 
+                                                     & vlTOPp->top__DOT__cpu__DOT__mem_rdata_q)) 
+                                                   & (~ (IData)(
+                                                                (0U 
+                                                                 != 
+                                                                 (7U 
+                                                                  & (vlTOPp->top__DOT__cpu__DOT__mem_rdata_q 
+                                                                     >> 0xcU))))));
+    }
+    if ((1U & (~ (IData)(vlTOPp->resetn)))) {
+        vlTOPp->top__DOT__cpu__DOT__instr_fence = 0U;
+    }
+    if (vlTOPp->top__DOT__cpu__DOT__decoder_trigger_q) {
+        vlTOPp->top__DOT__cpu__DOT__cached_ascii_instr 
+            = vlTOPp->top__DOT__cpu__DOT__new_ascii_instr;
+    }
     if ((((IData)(vlTOPp->resetn) & (IData)(vlTOPp->top__DOT__cpu__DOT__cpuregs_write)) 
          & (0U != (IData)(vlTOPp->top__DOT__cpu__DOT__latched_rd)))) {
         __Vdlyvval__top__DOT__cpu__DOT__cpuregs__v0 
@@ -234,6 +290,28 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__1(Vtop__Syms* __restrict vlSymsp) {
         __Vdlyvset__top__DOT__cpu__DOT__cpuregs__v0 = 1U;
         __Vdlyvdim0__top__DOT__cpu__DOT__cpuregs__v0 
             = vlTOPp->top__DOT__cpu__DOT__latched_rd;
+    }
+    if (vlTOPp->top__DOT__cpu__DOT__decoder_trigger_q) {
+        vlTOPp->top__DOT__cpu__DOT__cached_insn_rd 
+            = vlTOPp->top__DOT__cpu__DOT__decoded_rd;
+    }
+    if (vlTOPp->top__DOT__cpu__DOT__decoder_trigger_q) {
+        vlTOPp->top__DOT__cpu__DOT__cached_insn_rs1 
+            = vlTOPp->top__DOT__cpu__DOT__decoded_rs1;
+    }
+    if (vlTOPp->top__DOT__cpu__DOT__decoder_trigger_q) {
+        vlTOPp->top__DOT__cpu__DOT__cached_insn_rs2 
+            = vlTOPp->top__DOT__cpu__DOT__decoded_rs2;
+    }
+    if (vlTOPp->top__DOT__cpu__DOT__decoder_trigger_q) {
+        vlTOPp->top__DOT__cpu__DOT__cached_insn_opcode 
+            = ((3U == (3U & vlTOPp->top__DOT__cpu__DOT__next_insn_opcode))
+                ? vlTOPp->top__DOT__cpu__DOT__next_insn_opcode
+                : (0xffffU & vlTOPp->top__DOT__cpu__DOT__next_insn_opcode));
+    }
+    if (vlTOPp->top__DOT__cpu__DOT__decoder_trigger_q) {
+        vlTOPp->top__DOT__cpu__DOT__cached_insn_imm 
+            = vlTOPp->top__DOT__cpu__DOT__decoded_imm;
     }
     vlTOPp->top__DOT__cpu__DOT__pcpi_mul_wr = 0U;
     if (((IData)(vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__mul_finish) 
@@ -257,6 +335,19 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__1(Vtop__Syms* __restrict vlSymsp) {
     if (__Vdlyvset__top__DOT__cpu__DOT__cpuregs__v0) {
         vlTOPp->top__DOT__cpu__DOT__cpuregs[__Vdlyvdim0__top__DOT__cpu__DOT__cpuregs__v0] 
             = __Vdlyvval__top__DOT__cpu__DOT__cpuregs__v0;
+    }
+    vlTOPp->top__DOT__cpu__DOT__last_mem_valid = ((IData)(vlTOPp->resetn) 
+                                                  & ((IData)(vlTOPp->top__DOT__mem_valid) 
+                                                     & (~ (IData)(vlTOPp->top__DOT__mem_ready))));
+    if (((IData)(vlTOPp->top__DOT__cpu__DOT__mem_do_rinst) 
+         & (IData)(vlTOPp->top__DOT__cpu__DOT__mem_done))) {
+        vlTOPp->top__DOT__cpu__DOT__decoded_rs1 = (0x1fU 
+                                                   & (vlTOPp->top__DOT__cpu__DOT__mem_rdata_latched_noshuffle 
+                                                      >> 0xfU));
+    }
+    if (vlTOPp->top__DOT__cpu__DOT__mem_xfer) {
+        vlTOPp->top__DOT__cpu__DOT__next_insn_opcode 
+            = vlTOPp->top__DOT__mem_rdata;
     }
     vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__mul_finish = 0U;
     if (vlTOPp->resetn) {
@@ -300,6 +391,22 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__1(Vtop__Syms* __restrict vlSymsp) {
     }
     vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__mul_counter 
         = __Vdly__top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__mul_counter;
+    vlTOPp->top__DOT__cpu__DOT__dbg_insn_rs1 = vlTOPp->top__DOT__cpu__DOT__q_insn_rs1;
+    if (vlTOPp->top__DOT__cpu__DOT__dbg_next) {
+        vlTOPp->top__DOT__cpu__DOT__dbg_insn_rs1 = 
+            ((IData)(vlTOPp->top__DOT__cpu__DOT__decoder_pseudo_trigger_q)
+              ? (IData)(vlTOPp->top__DOT__cpu__DOT__cached_insn_rs1)
+              : (IData)(vlTOPp->top__DOT__cpu__DOT__decoded_rs1));
+    }
+    vlTOPp->top__DOT__cpu__DOT__dbg_insn_opcode = vlTOPp->top__DOT__cpu__DOT__q_insn_opcode;
+    if (vlTOPp->top__DOT__cpu__DOT__dbg_next) {
+        vlTOPp->top__DOT__cpu__DOT__dbg_insn_opcode 
+            = ((IData)(vlTOPp->top__DOT__cpu__DOT__decoder_pseudo_trigger_q)
+                ? vlTOPp->top__DOT__cpu__DOT__cached_insn_opcode
+                : ((3U == (3U & vlTOPp->top__DOT__cpu__DOT__next_insn_opcode))
+                    ? vlTOPp->top__DOT__cpu__DOT__next_insn_opcode
+                    : (0xffffU & vlTOPp->top__DOT__cpu__DOT__next_insn_opcode)));
+    }
     vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd 
         = vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__rd;
     vlTOPp->top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdx 
@@ -676,12 +783,19 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__1(Vtop__Syms* __restrict vlSymsp) {
     vlTOPp->top__DOT__cpu__DOT__set_mem_do_rinst = 0U;
     vlTOPp->top__DOT__cpu__DOT__set_mem_do_rdata = 0U;
     vlTOPp->top__DOT__cpu__DOT__set_mem_do_wdata = 0U;
+    if (vlTOPp->top__DOT__cpu__DOT__launch_next_insn) {
+        vlTOPp->top__DOT__cpu__DOT__dbg_rs1val = 0U;
+        vlTOPp->top__DOT__cpu__DOT__dbg_rs2val = 0U;
+        vlTOPp->top__DOT__cpu__DOT__dbg_rs1val_valid = 0U;
+        vlTOPp->top__DOT__cpu__DOT__dbg_rs2val_valid = 0U;
+    }
     __Vdly__top__DOT__cpu__DOT__count_cycle = ((IData)(vlTOPp->resetn)
                                                 ? (1ULL 
                                                    + vlTOPp->top__DOT__cpu__DOT__count_cycle)
                                                 : 0ULL);
     __Vdly__top__DOT__cpu__DOT__decoder_trigger = ((IData)(vlTOPp->top__DOT__cpu__DOT__mem_do_rinst) 
                                                    & (IData)(vlTOPp->top__DOT__cpu__DOT__mem_done));
+    vlTOPp->top__DOT__cpu__DOT__decoder_trigger_q = vlTOPp->top__DOT__cpu__DOT__decoder_trigger;
     __Vdly__top__DOT__cpu__DOT__decoder_pseudo_trigger = 0U;
     if (vlTOPp->resetn) {
         if (((((((((0x80U == (IData)(vlTOPp->top__DOT__cpu__DOT__cpu_state)) 
@@ -727,6 +841,8 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__1(Vtop__Syms* __restrict vlSymsp) {
                     if (vlTOPp->top__DOT__cpu__DOT__decoder_trigger) {
                         __Vdly__top__DOT__cpu__DOT__count_instr 
                             = (1ULL + vlTOPp->top__DOT__cpu__DOT__count_instr);
+                        vlTOPp->top__DOT__cpu__DOT__irq_delay 
+                            = vlTOPp->top__DOT__cpu__DOT__irq_active;
                         vlTOPp->top__DOT__cpu__DOT__reg_next_pc 
                             = (vlTOPp->top__DOT__cpu__DOT__current_pc 
                                + ((IData)(vlTOPp->top__DOT__cpu__DOT__compressed_instr)
@@ -755,11 +871,17 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__1(Vtop__Syms* __restrict vlSymsp) {
                             if (vlTOPp->top__DOT__cpu__DOT__instr_trap) {
                                 __Vdly__top__DOT__cpu__DOT__reg_op1 
                                     = vlTOPp->top__DOT__cpu__DOT__cpuregs_rs1;
+                                vlTOPp->top__DOT__cpu__DOT__dbg_rs1val 
+                                    = vlTOPp->top__DOT__cpu__DOT__cpuregs_rs1;
+                                vlTOPp->top__DOT__cpu__DOT__dbg_rs1val_valid = 1U;
                                 __Vdly__top__DOT__pcpi_valid = 1U;
                                 __Vdly__top__DOT__cpu__DOT__reg_sh 
                                     = (0x1fU & vlTOPp->top__DOT__cpu__DOT__cpuregs_rs2);
                                 vlTOPp->top__DOT__cpu__DOT__reg_op2 
                                     = vlTOPp->top__DOT__cpu__DOT__cpuregs_rs2;
+                                vlTOPp->top__DOT__cpu__DOT__dbg_rs2val 
+                                    = vlTOPp->top__DOT__cpu__DOT__cpuregs_rs2;
+                                vlTOPp->top__DOT__cpu__DOT__dbg_rs2val_valid = 1U;
                                 if (vlTOPp->top__DOT__cpu__DOT__pcpi_int_ready) {
                                     __Vdly__top__DOT__cpu__DOT__mem_do_rinst = 1U;
                                     __Vdly__top__DOT__pcpi_valid = 0U;
@@ -817,6 +939,9 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__1(Vtop__Syms* __restrict vlSymsp) {
                                         vlTOPp->top__DOT__cpu__DOT__latched_store = 1U;
                                         __Vdly__top__DOT__cpu__DOT__reg_out 
                                             = vlTOPp->top__DOT__cpu__DOT__timer;
+                                        vlTOPp->top__DOT__cpu__DOT__dbg_rs1val 
+                                            = vlTOPp->top__DOT__cpu__DOT__cpuregs_rs1;
+                                        vlTOPp->top__DOT__cpu__DOT__dbg_rs1val_valid = 1U;
                                         __Vdly__top__DOT__cpu__DOT__cpu_state = 0x40U;
                                         vlTOPp->top__DOT__cpu__DOT__timer 
                                             = vlTOPp->top__DOT__cpu__DOT__cpuregs_rs1;
@@ -828,12 +953,18 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__1(Vtop__Syms* __restrict vlSymsp) {
                                  & (~ (IData)(vlTOPp->top__DOT__cpu__DOT__instr_trap)))) {
                                 __Vdly__top__DOT__cpu__DOT__reg_op1 
                                     = vlTOPp->top__DOT__cpu__DOT__cpuregs_rs1;
+                                vlTOPp->top__DOT__cpu__DOT__dbg_rs1val 
+                                    = vlTOPp->top__DOT__cpu__DOT__cpuregs_rs1;
+                                vlTOPp->top__DOT__cpu__DOT__dbg_rs1val_valid = 1U;
                                 __Vdly__top__DOT__cpu__DOT__cpu_state = 1U;
                                 __Vdly__top__DOT__cpu__DOT__mem_do_rinst = 1U;
                             } else {
                                 if (vlTOPp->top__DOT__cpu__DOT__is_slli_srli_srai) {
                                     __Vdly__top__DOT__cpu__DOT__reg_op1 
                                         = vlTOPp->top__DOT__cpu__DOT__cpuregs_rs1;
+                                    vlTOPp->top__DOT__cpu__DOT__dbg_rs1val 
+                                        = vlTOPp->top__DOT__cpu__DOT__cpuregs_rs1;
+                                    vlTOPp->top__DOT__cpu__DOT__dbg_rs1val_valid = 1U;
                                     __Vdly__top__DOT__cpu__DOT__reg_sh 
                                         = vlTOPp->top__DOT__cpu__DOT__decoded_rs2;
                                     __Vdly__top__DOT__cpu__DOT__cpu_state = 4U;
@@ -841,6 +972,9 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__1(Vtop__Syms* __restrict vlSymsp) {
                                     if (vlTOPp->top__DOT__cpu__DOT__is_jalr_addi_slti_sltiu_xori_ori_andi) {
                                         __Vdly__top__DOT__cpu__DOT__reg_op1 
                                             = vlTOPp->top__DOT__cpu__DOT__cpuregs_rs1;
+                                        vlTOPp->top__DOT__cpu__DOT__dbg_rs1val 
+                                            = vlTOPp->top__DOT__cpu__DOT__cpuregs_rs1;
+                                        vlTOPp->top__DOT__cpu__DOT__dbg_rs1val_valid = 1U;
                                         vlTOPp->top__DOT__cpu__DOT__reg_op2 
                                             = vlTOPp->top__DOT__cpu__DOT__decoded_imm;
                                         __Vdly__top__DOT__cpu__DOT__mem_do_rinst 
@@ -849,11 +983,17 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__1(Vtop__Syms* __restrict vlSymsp) {
                                     } else {
                                         __Vdly__top__DOT__cpu__DOT__reg_op1 
                                             = vlTOPp->top__DOT__cpu__DOT__cpuregs_rs1;
+                                        vlTOPp->top__DOT__cpu__DOT__dbg_rs1val 
+                                            = vlTOPp->top__DOT__cpu__DOT__cpuregs_rs1;
+                                        vlTOPp->top__DOT__cpu__DOT__dbg_rs1val_valid = 1U;
                                         __Vdly__top__DOT__cpu__DOT__reg_sh 
                                             = (0x1fU 
                                                & vlTOPp->top__DOT__cpu__DOT__cpuregs_rs2);
                                         vlTOPp->top__DOT__cpu__DOT__reg_op2 
                                             = vlTOPp->top__DOT__cpu__DOT__cpuregs_rs2;
+                                        vlTOPp->top__DOT__cpu__DOT__dbg_rs2val 
+                                            = vlTOPp->top__DOT__cpu__DOT__cpuregs_rs2;
+                                        vlTOPp->top__DOT__cpu__DOT__dbg_rs2val_valid = 1U;
                                         if (vlTOPp->top__DOT__cpu__DOT__is_sb_sh_sw) {
                                             __Vdly__top__DOT__cpu__DOT__cpu_state = 2U;
                                             __Vdly__top__DOT__cpu__DOT__mem_do_rinst = 1U;
@@ -876,6 +1016,9 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__1(Vtop__Syms* __restrict vlSymsp) {
                                 = (0x1fU & vlTOPp->top__DOT__cpu__DOT__cpuregs_rs2);
                             vlTOPp->top__DOT__cpu__DOT__reg_op2 
                                 = vlTOPp->top__DOT__cpu__DOT__cpuregs_rs2;
+                            vlTOPp->top__DOT__cpu__DOT__dbg_rs2val 
+                                = vlTOPp->top__DOT__cpu__DOT__cpuregs_rs2;
+                            vlTOPp->top__DOT__cpu__DOT__dbg_rs2val_valid = 1U;
                             if (vlTOPp->top__DOT__cpu__DOT__instr_trap) {
                                 __Vdly__top__DOT__pcpi_valid = 1U;
                                 if (vlTOPp->top__DOT__cpu__DOT__pcpi_int_ready) {
@@ -1114,6 +1257,7 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__1(Vtop__Syms* __restrict vlSymsp) {
         __Vdly__top__DOT__cpu__DOT__latched_is_lh = 0U;
         __Vdly__top__DOT__cpu__DOT__latched_is_lb = 0U;
         __Vdly__top__DOT__pcpi_valid = 0U;
+        vlTOPp->top__DOT__cpu__DOT__irq_delay = 0U;
         __Vdly__top__DOT__cpu__DOT__cpu_state = 0x40U;
     }
     if (((IData)(vlTOPp->resetn) & ((IData)(vlTOPp->top__DOT__cpu__DOT__mem_do_rdata) 
@@ -1183,6 +1327,19 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__1(Vtop__Syms* __restrict vlSymsp) {
     vlTOPp->top__DOT__cpu__DOT__reg_out = __Vdly__top__DOT__cpu__DOT__reg_out;
     vlTOPp->top__DOT__cpu__DOT__cpu_state = __Vdly__top__DOT__cpu__DOT__cpu_state;
     vlTOPp->top__DOT__cpu__DOT__do_waitirq = 0U;
+    vlTOPp->__Vtableidx1 = vlTOPp->top__DOT__cpu__DOT__cpu_state;
+    vlTOPp->top__DOT__cpu__DOT__dbg_ascii_state[0U] 
+        = vlTOPp->__Vtable1_top__DOT__cpu__DOT__dbg_ascii_state
+        [vlTOPp->__Vtableidx1][0U];
+    vlTOPp->top__DOT__cpu__DOT__dbg_ascii_state[1U] 
+        = vlTOPp->__Vtable1_top__DOT__cpu__DOT__dbg_ascii_state
+        [vlTOPp->__Vtableidx1][1U];
+    vlTOPp->top__DOT__cpu__DOT__dbg_ascii_state[2U] 
+        = vlTOPp->__Vtable1_top__DOT__cpu__DOT__dbg_ascii_state
+        [vlTOPp->__Vtableidx1][2U];
+    vlTOPp->top__DOT__cpu__DOT__dbg_ascii_state[3U] 
+        = vlTOPp->__Vtable1_top__DOT__cpu__DOT__dbg_ascii_state
+        [vlTOPp->__Vtableidx1][3U];
     vlTOPp->top__DOT__cpu__DOT__cpuregs_write = 0U;
     if ((0x40U == (IData)(vlTOPp->top__DOT__cpu__DOT__cpu_state))) {
         if (vlTOPp->top__DOT__cpu__DOT__latched_branch) {
@@ -1193,6 +1350,9 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__1(Vtop__Syms* __restrict vlSymsp) {
                 vlTOPp->top__DOT__cpu__DOT__cpuregs_write = 1U;
             }
         }
+    }
+    if ((1U & (~ (IData)(vlTOPp->resetn)))) {
+        vlTOPp->top__DOT__cpu__DOT__irq_active = 0U;
     }
     vlTOPp->top__DOT__cpu__DOT__alu_out_q = vlTOPp->top__DOT__cpu__DOT__alu_out;
     if (((IData)(vlTOPp->top__DOT__cpu__DOT__mem_do_rinst) 
@@ -1524,11 +1684,24 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__1(Vtop__Syms* __restrict vlSymsp) {
             }
         }
     }
+    vlTOPp->top__DOT__cpu__DOT__dbg_insn_rd = vlTOPp->top__DOT__cpu__DOT__q_insn_rd;
+    if (vlTOPp->top__DOT__cpu__DOT__dbg_next) {
+        vlTOPp->top__DOT__cpu__DOT__dbg_insn_rd = ((IData)(vlTOPp->top__DOT__cpu__DOT__decoder_pseudo_trigger_q)
+                                                    ? (IData)(vlTOPp->top__DOT__cpu__DOT__cached_insn_rd)
+                                                    : (IData)(vlTOPp->top__DOT__cpu__DOT__decoded_rd));
+    }
     vlTOPp->top__DOT__cpu__DOT__cpuregs_rs2 = ((0U 
                                                 != (IData)(vlTOPp->top__DOT__cpu__DOT__decoded_rs2))
                                                 ? vlTOPp->top__DOT__cpu__DOT__cpuregs
                                                [vlTOPp->top__DOT__cpu__DOT__decoded_rs2]
                                                 : 0U);
+    vlTOPp->top__DOT__cpu__DOT__dbg_insn_rs2 = vlTOPp->top__DOT__cpu__DOT__q_insn_rs2;
+    if (vlTOPp->top__DOT__cpu__DOT__dbg_next) {
+        vlTOPp->top__DOT__cpu__DOT__dbg_insn_rs2 = 
+            ((IData)(vlTOPp->top__DOT__cpu__DOT__decoder_pseudo_trigger_q)
+              ? (IData)(vlTOPp->top__DOT__cpu__DOT__cached_insn_rs2)
+              : (IData)(vlTOPp->top__DOT__cpu__DOT__decoded_rs2));
+    }
     vlTOPp->top__DOT__cpu__DOT__is_rdcycle_rdcycleh_rdinstr_rdinstrh 
         = ((IData)(vlTOPp->top__DOT__cpu__DOT__instr_rdcycle) 
            | ((IData)(vlTOPp->top__DOT__cpu__DOT__instr_rdcycleh) 
@@ -1883,6 +2056,13 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__1(Vtop__Syms* __restrict vlSymsp) {
             }
         }
     }
+    vlTOPp->top__DOT__cpu__DOT__dbg_insn_imm = vlTOPp->top__DOT__cpu__DOT__q_insn_imm;
+    if (vlTOPp->top__DOT__cpu__DOT__dbg_next) {
+        vlTOPp->top__DOT__cpu__DOT__dbg_insn_imm = 
+            ((IData)(vlTOPp->top__DOT__cpu__DOT__decoder_pseudo_trigger_q)
+              ? vlTOPp->top__DOT__cpu__DOT__cached_insn_imm
+              : vlTOPp->top__DOT__cpu__DOT__decoded_imm);
+    }
     if (((IData)(vlTOPp->top__DOT__cpu__DOT__mem_do_rinst) 
          & (IData)(vlTOPp->top__DOT__cpu__DOT__mem_done))) {
         vlTOPp->top__DOT__cpu__DOT__is_alu_reg_imm 
@@ -2124,6 +2304,11 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__1(Vtop__Syms* __restrict vlSymsp) {
          & (~ (IData)(vlTOPp->top__DOT__cpu__DOT__decoder_pseudo_trigger)))) {
         vlTOPp->top__DOT__pcpi_insn = vlTOPp->top__DOT__cpu__DOT__mem_rdata_q;
     }
+    if (((IData)(vlTOPp->top__DOT__cpu__DOT__mem_do_rinst) 
+         & (IData)(vlTOPp->top__DOT__cpu__DOT__mem_done))) {
+        vlTOPp->top__DOT__cpu__DOT__is_alu_reg_reg 
+            = (0x33U == (0x7fU & vlTOPp->top__DOT__cpu__DOT__mem_rdata_latched_noshuffle));
+    }
     vlTOPp->top__DOT__cpu__DOT__instr_trap = (1U & 
                                               (~ (((IData)(vlTOPp->top__DOT__cpu__DOT__instr_lui) 
                                                    | ((IData)(vlTOPp->top__DOT__cpu__DOT__instr_auipc) 
@@ -2173,14 +2358,164 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__1(Vtop__Syms* __restrict vlSymsp) {
                                                                                 | ((IData)(vlTOPp->top__DOT__cpu__DOT__instr_maskirq) 
                                                                                 | ((IData)(vlTOPp->top__DOT__cpu__DOT__instr_waitirq) 
                                                                                 | (IData)(vlTOPp->top__DOT__cpu__DOT__instr_timer)))))))))))))))))));
-    if (((IData)(vlTOPp->top__DOT__cpu__DOT__mem_do_rinst) 
-         & (IData)(vlTOPp->top__DOT__cpu__DOT__mem_done))) {
-        vlTOPp->top__DOT__cpu__DOT__is_alu_reg_reg 
-            = (0x33U == (0x7fU & vlTOPp->top__DOT__cpu__DOT__mem_rdata_latched_noshuffle));
+    vlTOPp->top__DOT__cpu__DOT__new_ascii_instr = 0ULL;
+    if (vlTOPp->top__DOT__cpu__DOT__instr_lui) {
+        vlTOPp->top__DOT__cpu__DOT__new_ascii_instr = 0x6c7569ULL;
+    }
+    if (vlTOPp->top__DOT__cpu__DOT__instr_auipc) {
+        vlTOPp->top__DOT__cpu__DOT__new_ascii_instr = 0x6175697063ULL;
+    }
+    if (vlTOPp->top__DOT__cpu__DOT__instr_jal) {
+        vlTOPp->top__DOT__cpu__DOT__new_ascii_instr = 0x6a616cULL;
+    }
+    if (vlTOPp->top__DOT__cpu__DOT__instr_jalr) {
+        vlTOPp->top__DOT__cpu__DOT__new_ascii_instr = 0x6a616c72ULL;
+    }
+    if (vlTOPp->top__DOT__cpu__DOT__instr_beq) {
+        vlTOPp->top__DOT__cpu__DOT__new_ascii_instr = 0x626571ULL;
+    }
+    if (vlTOPp->top__DOT__cpu__DOT__instr_bne) {
+        vlTOPp->top__DOT__cpu__DOT__new_ascii_instr = 0x626e65ULL;
+    }
+    if (vlTOPp->top__DOT__cpu__DOT__instr_blt) {
+        vlTOPp->top__DOT__cpu__DOT__new_ascii_instr = 0x626c74ULL;
+    }
+    if (vlTOPp->top__DOT__cpu__DOT__instr_bge) {
+        vlTOPp->top__DOT__cpu__DOT__new_ascii_instr = 0x626765ULL;
+    }
+    if (vlTOPp->top__DOT__cpu__DOT__instr_bltu) {
+        vlTOPp->top__DOT__cpu__DOT__new_ascii_instr = 0x626c7475ULL;
+    }
+    if (vlTOPp->top__DOT__cpu__DOT__instr_bgeu) {
+        vlTOPp->top__DOT__cpu__DOT__new_ascii_instr = 0x62676575ULL;
+    }
+    if (vlTOPp->top__DOT__cpu__DOT__instr_lb) {
+        vlTOPp->top__DOT__cpu__DOT__new_ascii_instr = 0x6c62ULL;
+    }
+    if (vlTOPp->top__DOT__cpu__DOT__instr_lh) {
+        vlTOPp->top__DOT__cpu__DOT__new_ascii_instr = 0x6c68ULL;
+    }
+    if (vlTOPp->top__DOT__cpu__DOT__instr_lw) {
+        vlTOPp->top__DOT__cpu__DOT__new_ascii_instr = 0x6c77ULL;
+    }
+    if (vlTOPp->top__DOT__cpu__DOT__instr_lbu) {
+        vlTOPp->top__DOT__cpu__DOT__new_ascii_instr = 0x6c6275ULL;
+    }
+    if (vlTOPp->top__DOT__cpu__DOT__instr_lhu) {
+        vlTOPp->top__DOT__cpu__DOT__new_ascii_instr = 0x6c6875ULL;
+    }
+    if (vlTOPp->top__DOT__cpu__DOT__instr_sb) {
+        vlTOPp->top__DOT__cpu__DOT__new_ascii_instr = 0x7362ULL;
+    }
+    if (vlTOPp->top__DOT__cpu__DOT__instr_sh) {
+        vlTOPp->top__DOT__cpu__DOT__new_ascii_instr = 0x7368ULL;
+    }
+    if (vlTOPp->top__DOT__cpu__DOT__instr_sw) {
+        vlTOPp->top__DOT__cpu__DOT__new_ascii_instr = 0x7377ULL;
+    }
+    if (vlTOPp->top__DOT__cpu__DOT__instr_addi) {
+        vlTOPp->top__DOT__cpu__DOT__new_ascii_instr = 0x61646469ULL;
+    }
+    if (vlTOPp->top__DOT__cpu__DOT__instr_slti) {
+        vlTOPp->top__DOT__cpu__DOT__new_ascii_instr = 0x736c7469ULL;
+    }
+    if (vlTOPp->top__DOT__cpu__DOT__instr_sltiu) {
+        vlTOPp->top__DOT__cpu__DOT__new_ascii_instr = 0x736c746975ULL;
+    }
+    if (vlTOPp->top__DOT__cpu__DOT__instr_xori) {
+        vlTOPp->top__DOT__cpu__DOT__new_ascii_instr = 0x786f7269ULL;
+    }
+    if (vlTOPp->top__DOT__cpu__DOT__instr_ori) {
+        vlTOPp->top__DOT__cpu__DOT__new_ascii_instr = 0x6f7269ULL;
+    }
+    if (vlTOPp->top__DOT__cpu__DOT__instr_andi) {
+        vlTOPp->top__DOT__cpu__DOT__new_ascii_instr = 0x616e6469ULL;
+    }
+    if (vlTOPp->top__DOT__cpu__DOT__instr_slli) {
+        vlTOPp->top__DOT__cpu__DOT__new_ascii_instr = 0x736c6c69ULL;
+    }
+    if (vlTOPp->top__DOT__cpu__DOT__instr_srli) {
+        vlTOPp->top__DOT__cpu__DOT__new_ascii_instr = 0x73726c69ULL;
+    }
+    if (vlTOPp->top__DOT__cpu__DOT__instr_srai) {
+        vlTOPp->top__DOT__cpu__DOT__new_ascii_instr = 0x73726169ULL;
+    }
+    if (vlTOPp->top__DOT__cpu__DOT__instr_add) {
+        vlTOPp->top__DOT__cpu__DOT__new_ascii_instr = 0x616464ULL;
+    }
+    if (vlTOPp->top__DOT__cpu__DOT__instr_sub) {
+        vlTOPp->top__DOT__cpu__DOT__new_ascii_instr = 0x737562ULL;
+    }
+    if (vlTOPp->top__DOT__cpu__DOT__instr_sll) {
+        vlTOPp->top__DOT__cpu__DOT__new_ascii_instr = 0x736c6cULL;
+    }
+    if (vlTOPp->top__DOT__cpu__DOT__instr_slt) {
+        vlTOPp->top__DOT__cpu__DOT__new_ascii_instr = 0x736c74ULL;
+    }
+    if (vlTOPp->top__DOT__cpu__DOT__instr_sltu) {
+        vlTOPp->top__DOT__cpu__DOT__new_ascii_instr = 0x736c7475ULL;
+    }
+    if (vlTOPp->top__DOT__cpu__DOT__instr_xor) {
+        vlTOPp->top__DOT__cpu__DOT__new_ascii_instr = 0x786f72ULL;
+    }
+    if (vlTOPp->top__DOT__cpu__DOT__instr_srl) {
+        vlTOPp->top__DOT__cpu__DOT__new_ascii_instr = 0x73726cULL;
+    }
+    if (vlTOPp->top__DOT__cpu__DOT__instr_sra) {
+        vlTOPp->top__DOT__cpu__DOT__new_ascii_instr = 0x737261ULL;
+    }
+    if (vlTOPp->top__DOT__cpu__DOT__instr_or) {
+        vlTOPp->top__DOT__cpu__DOT__new_ascii_instr = 0x6f72ULL;
+    }
+    if (vlTOPp->top__DOT__cpu__DOT__instr_and) {
+        vlTOPp->top__DOT__cpu__DOT__new_ascii_instr = 0x616e64ULL;
+    }
+    if (vlTOPp->top__DOT__cpu__DOT__instr_rdcycle) {
+        vlTOPp->top__DOT__cpu__DOT__new_ascii_instr = 0x72646379636c65ULL;
+    }
+    if (vlTOPp->top__DOT__cpu__DOT__instr_rdcycleh) {
+        vlTOPp->top__DOT__cpu__DOT__new_ascii_instr = 0x72646379636c6568ULL;
+    }
+    if (vlTOPp->top__DOT__cpu__DOT__instr_rdinstr) {
+        vlTOPp->top__DOT__cpu__DOT__new_ascii_instr = 0x7264696e737472ULL;
+    }
+    if (vlTOPp->top__DOT__cpu__DOT__instr_rdinstrh) {
+        vlTOPp->top__DOT__cpu__DOT__new_ascii_instr = 0x7264696e73747268ULL;
+    }
+    if (vlTOPp->top__DOT__cpu__DOT__instr_fence) {
+        vlTOPp->top__DOT__cpu__DOT__new_ascii_instr = 0x66656e6365ULL;
+    }
+    if (vlTOPp->top__DOT__cpu__DOT__instr_getq) {
+        vlTOPp->top__DOT__cpu__DOT__new_ascii_instr = 0x67657471ULL;
+    }
+    if (vlTOPp->top__DOT__cpu__DOT__instr_setq) {
+        vlTOPp->top__DOT__cpu__DOT__new_ascii_instr = 0x73657471ULL;
+    }
+    if (vlTOPp->top__DOT__cpu__DOT__compressed_instr) {
+        vlTOPp->top__DOT__cpu__DOT__new_ascii_instr = 0x726574697271ULL;
+    }
+    if (vlTOPp->top__DOT__cpu__DOT__instr_maskirq) {
+        vlTOPp->top__DOT__cpu__DOT__new_ascii_instr = 0x6d61736b697271ULL;
+    }
+    if (vlTOPp->top__DOT__cpu__DOT__instr_waitirq) {
+        vlTOPp->top__DOT__cpu__DOT__new_ascii_instr = 0x77616974697271ULL;
+    }
+    if (vlTOPp->top__DOT__cpu__DOT__instr_timer) {
+        vlTOPp->top__DOT__cpu__DOT__new_ascii_instr = 0x74696d6572ULL;
     }
     vlTOPp->top__DOT__cpu__DOT__decoder_pseudo_trigger 
         = __Vdly__top__DOT__cpu__DOT__decoder_pseudo_trigger;
     vlTOPp->top__DOT__cpu__DOT__decoder_trigger = __Vdly__top__DOT__cpu__DOT__decoder_trigger;
+    vlTOPp->top__DOT__cpu__DOT__dbg_ascii_instr = vlTOPp->top__DOT__cpu__DOT__q_ascii_instr;
+    if (vlTOPp->top__DOT__cpu__DOT__dbg_next) {
+        vlTOPp->top__DOT__cpu__DOT__dbg_ascii_instr 
+            = ((IData)(vlTOPp->top__DOT__cpu__DOT__decoder_pseudo_trigger_q)
+                ? vlTOPp->top__DOT__cpu__DOT__cached_ascii_instr
+                : vlTOPp->top__DOT__cpu__DOT__new_ascii_instr);
+    }
+    vlTOPp->top__DOT__cpu__DOT__launch_next_insn = 
+        ((0x40U == (IData)(vlTOPp->top__DOT__cpu__DOT__cpu_state)) 
+         & (IData)(vlTOPp->top__DOT__cpu__DOT__decoder_trigger));
     if (vlTOPp->top__DOT__cpu__DOT__mem_xfer) {
         vlTOPp->top__DOT__cpu__DOT__mem_rdata_q = vlTOPp->top__DOT__mem_rdata;
     }
@@ -2280,6 +2615,7 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__1(Vtop__Syms* __restrict vlSymsp) {
         if ((1U & ((~ (IData)(vlTOPp->resetn)) | (IData)(vlTOPp->top__DOT__mem_ready)))) {
             vlTOPp->top__DOT__mem_valid = 0U;
         }
+        vlTOPp->top__DOT__cpu__DOT__mem_la_secondword = 0U;
     } else {
         if (((IData)(vlTOPp->top__DOT__cpu__DOT__mem_la_read) 
              | (IData)(vlTOPp->top__DOT__cpu__DOT__mem_la_write))) {
@@ -2291,17 +2627,21 @@ VL_INLINE_OPT void Vtop::_sequent__TOP__1(Vtop__Syms* __restrict vlSymsp) {
                   | (IData)(vlTOPp->top__DOT__cpu__DOT__mem_do_rinst)) 
                  | (IData)(vlTOPp->top__DOT__cpu__DOT__mem_do_rdata))) {
                 vlTOPp->top__DOT__mem_valid = 1U;
+                vlTOPp->top__DOT__mem_instr = ((IData)(vlTOPp->top__DOT__cpu__DOT__mem_do_prefetch) 
+                                               | (IData)(vlTOPp->top__DOT__cpu__DOT__mem_do_rinst));
                 vlTOPp->top__DOT__mem_wstrb = 0U;
                 __Vdly__top__DOT__cpu__DOT__mem_state = 1U;
             }
             if (vlTOPp->top__DOT__cpu__DOT__mem_do_wdata) {
                 vlTOPp->top__DOT__mem_valid = 1U;
+                vlTOPp->top__DOT__mem_instr = 0U;
                 __Vdly__top__DOT__cpu__DOT__mem_state = 2U;
             }
         } else {
             if ((1U == (IData)(vlTOPp->top__DOT__cpu__DOT__mem_state))) {
                 if (vlTOPp->top__DOT__cpu__DOT__mem_xfer) {
                     vlTOPp->top__DOT__mem_valid = 0U;
+                    vlTOPp->top__DOT__cpu__DOT__mem_la_secondword = 0U;
                     __Vdly__top__DOT__cpu__DOT__mem_state 
                         = (((IData)(vlTOPp->top__DOT__cpu__DOT__mem_do_rinst) 
                             | (IData)(vlTOPp->top__DOT__cpu__DOT__mem_do_rdata))
@@ -2802,6 +3142,16 @@ VL_INLINE_OPT void Vtop::_combo__TOP__4(Vtop__Syms* __restrict vlSymsp) {
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vtop::_combo__TOP__4\n"); );
     Vtop* const __restrict vlTOPp VL_ATTR_UNUSED = vlSymsp->TOPp;
     // Body
+    vlTOPp->top__DOT__cpu__DOT__clear_prefetched_high_word 
+        = vlTOPp->top__DOT__cpu__DOT__clear_prefetched_high_word_q;
+    if ((1U & (~ (IData)(vlTOPp->top__DOT__cpu__DOT__prefetched_high_word)))) {
+        vlTOPp->top__DOT__cpu__DOT__clear_prefetched_high_word = 0U;
+    }
+    if ((1U & (((IData)(vlTOPp->top__DOT__cpu__DOT__latched_branch) 
+                | (0U != (IData)(vlTOPp->top__DOT__cpu__DOT__irq_state))) 
+               | (~ (IData)(vlTOPp->resetn))))) {
+        vlTOPp->top__DOT__cpu__DOT__clear_prefetched_high_word = 0U;
+    }
     vlTOPp->top__DOT__cpu__DOT__mem_la_write = (((IData)(vlTOPp->resetn) 
                                                  & (~ (IData)(
                                                               (0U 
@@ -2832,8 +3182,10 @@ void Vtop::_eval(Vtop__Syms* __restrict vlSymsp) {
     // Body
     if (((IData)(vlTOPp->clk) & (~ (IData)(vlTOPp->__Vclklast__TOP__clk)))) {
         vlTOPp->_sequent__TOP__1(vlSymsp);
+        vlTOPp->__Vm_traceActivity[1U] = 1U;
     }
     vlTOPp->_combo__TOP__4(vlSymsp);
+    vlTOPp->__Vm_traceActivity[2U] = 1U;
     // Final
     vlTOPp->__Vclklast__TOP__clk = vlTOPp->clk;
 }

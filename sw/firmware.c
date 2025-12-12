@@ -1,10 +1,9 @@
-// sw/firmware.c - FINAL SURUM (CNN + HIZ TESTI)
 #include <stdint.h>
 #include "model_data.h" 
 
 #define OUTPORT 0x10000000
 
-// Kronometre Fonksiyonu
+// Kronometre (Cycle Sayacı)
 static inline uint32_t get_cycles() {
     uint32_t cycles;
     asm volatile ("rdcycle %0" : "=r" (cycles));
@@ -24,7 +23,7 @@ void main() {
     // --- KRONOMETREYİ BAŞLAT ---
     start_time = get_cycles();
 
-    // --- CONV2D İŞLEMİ (AĞIR YÜK) ---
+    // --- CONV2D İŞLEMİ (DONANIM İLE) ---
     // Resmin üzerinde geziyoruz (3x3'lük kısım)
     for (int y = 0; y < 3; y++) { 
         for (int x = 0; x < 3; x++) { 
@@ -40,7 +39,7 @@ void main() {
                     
                     int32_t res;
                     
-                    // DONANIMI ÇAĞIR
+                    // DONANIMI ÇAĞIR (SİHİRLİ KOMUT: 0x0B)
                     asm volatile (
                         ".insn r 0x0B, 0, 0, %0, %1, %2" 
                         : "=r"(res) : "r"(w), "r"(p)
@@ -49,7 +48,7 @@ void main() {
                     acc += res;
                 }
             }
-            // Her pikselin sonucunu bas (Doğruluk için)
+            // Her pikselin sonucunu bas (Doğruluk için: -805, 1038 vb.)
             print_val(acc);
         }
     }
@@ -60,5 +59,5 @@ void main() {
 
     // --- SONUÇLARI RAPORLA ---
     print_val(7777);       // Bitiş Ayracı
-    print_val(total_time); // TOPLAM SÜRE (Cycle)
+    print_val(total_time); // TOPLAM SÜRE
 }

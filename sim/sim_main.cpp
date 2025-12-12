@@ -1,44 +1,41 @@
-// sim/sim_main.cpp - NEGATIF SAYI GOSTEREN SURUM
 #include "Vtop.h"
 #include "verilated.h"
+#include "verilated_vcd_c.h" 
 #include <iostream>
-#include <iomanip> // std::setw için
 
 int main(int argc, char** argv) {
     Verilated::commandArgs(argc, argv);
+    Verilated::traceEverOn(true); 
+
     Vtop* top = new Vtop;
+    VerilatedVcdC* tfp = new VerilatedVcdC;
+    
+    top->trace(tfp, 99);
+    tfp->open("waveform_final.vcd"); // Dosya adı
 
     top->clk = 0;
     top->resetn = 0;
 
-    // 200.000 Cycle çalıştır
-    for (int i = 0; i < 200000; i++) {
+    int main_time = 0;
+
+    // 100.000 cycle çalıştır (Yeterince uzun)
+    while (main_time < 100000) { 
         top->clk = !top->clk;
-        if (i > 50) top->resetn = 1;
+        if (main_time > 50) top->resetn = 1;
+        
         top->eval();
-
-        // Çıktı yakalama
-        if (top->clk == 1 && top->out_valid == 1) {
-            
-            // --- KRİTİK NOKTA BURASI ---
-            // Verilator çıktıyı 'unsigned' (işaretsiz) verir.
-            // Biz onu zorla 'int32_t' (işaretli) yapıyoruz.
-            int32_t val = (int32_t)top->out_data; 
-
-            // Özel sinyalleri ayırt et
-            if (val == 9999) {
-                std::cout << "--- TEST BASLIYOR ---" << std::endl;
-            } 
-            else if (val == 7777) {
-                std::cout << "--- TEST BITTI ---" << std::endl;
-            }
-            else {
-                // Sayıyı hem normal hem de yanına açıklama ile basalım
-                std::cout << "OUTPUT: " << val << std::endl;
-            }
+        tfp->dump(main_time); // Kayıt
+        
+        // İş biterse erken çık (7777'yi görünce)
+        if (top->clk == 1 && top->out_valid == 1 && top->out_data == 7777) {
+            break; 
         }
+
+        main_time++;
     }
 
+    tfp->close();
     delete top;
+    printf("Kayit bitti: waveform_final.vcd olustu.\n");
     return 0;
 }

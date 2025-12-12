@@ -13,6 +13,8 @@
 //==========
 
 class Vtop__Syms;
+class Vtop_VerilatedVcd;
+
 
 //----------
 
@@ -32,6 +34,7 @@ VL_MODULE(Vtop) {
     // Anonymous structures to workaround compiler member-count bugs
     struct {
         CData/*0:0*/ top__DOT__mem_valid;
+        CData/*0:0*/ top__DOT__mem_instr;
         CData/*0:0*/ top__DOT__mem_ready;
         CData/*3:0*/ top__DOT__mem_wstrb;
         CData/*0:0*/ top__DOT__trap_signal;
@@ -41,7 +44,10 @@ VL_MODULE(Vtop) {
         CData/*0:0*/ top__DOT__cpu__DOT__mem_la_read;
         CData/*0:0*/ top__DOT__cpu__DOT__mem_la_write;
         CData/*3:0*/ top__DOT__cpu__DOT__mem_la_wstrb;
+        CData/*0:0*/ top__DOT__cpu__DOT__trace_valid;
         CData/*4:0*/ top__DOT__cpu__DOT__reg_sh;
+        CData/*0:0*/ top__DOT__cpu__DOT__irq_delay;
+        CData/*0:0*/ top__DOT__cpu__DOT__irq_active;
         CData/*0:0*/ top__DOT__cpu__DOT__pcpi_mul_wr;
         CData/*0:0*/ top__DOT__cpu__DOT__pcpi_mul_wait;
         CData/*0:0*/ top__DOT__cpu__DOT__pcpi_mul_ready;
@@ -54,6 +60,11 @@ VL_MODULE(Vtop) {
         CData/*0:0*/ top__DOT__cpu__DOT__mem_do_rdata;
         CData/*0:0*/ top__DOT__cpu__DOT__mem_do_wdata;
         CData/*0:0*/ top__DOT__cpu__DOT__mem_xfer;
+        CData/*0:0*/ top__DOT__cpu__DOT__mem_la_secondword;
+        CData/*0:0*/ top__DOT__cpu__DOT__mem_la_firstword_reg;
+        CData/*0:0*/ top__DOT__cpu__DOT__last_mem_valid;
+        CData/*0:0*/ top__DOT__cpu__DOT__prefetched_high_word;
+        CData/*0:0*/ top__DOT__cpu__DOT__clear_prefetched_high_word;
         CData/*0:0*/ top__DOT__cpu__DOT__mem_done;
         CData/*0:0*/ top__DOT__cpu__DOT__instr_lui;
         CData/*0:0*/ top__DOT__cpu__DOT__instr_auipc;
@@ -86,6 +97,8 @@ VL_MODULE(Vtop) {
         CData/*0:0*/ top__DOT__cpu__DOT__instr_sub;
         CData/*0:0*/ top__DOT__cpu__DOT__instr_sll;
         CData/*0:0*/ top__DOT__cpu__DOT__instr_slt;
+    };
+    struct {
         CData/*0:0*/ top__DOT__cpu__DOT__instr_sltu;
         CData/*0:0*/ top__DOT__cpu__DOT__instr_xor;
         CData/*0:0*/ top__DOT__cpu__DOT__instr_srl;
@@ -95,8 +108,6 @@ VL_MODULE(Vtop) {
         CData/*0:0*/ top__DOT__cpu__DOT__instr_rdcycle;
         CData/*0:0*/ top__DOT__cpu__DOT__instr_rdcycleh;
         CData/*0:0*/ top__DOT__cpu__DOT__instr_rdinstr;
-    };
-    struct {
         CData/*0:0*/ top__DOT__cpu__DOT__instr_rdinstrh;
         CData/*0:0*/ top__DOT__cpu__DOT__instr_ecall_ebreak;
         CData/*0:0*/ top__DOT__cpu__DOT__instr_fence;
@@ -110,7 +121,9 @@ VL_MODULE(Vtop) {
         CData/*4:0*/ top__DOT__cpu__DOT__decoded_rs1;
         CData/*4:0*/ top__DOT__cpu__DOT__decoded_rs2;
         CData/*0:0*/ top__DOT__cpu__DOT__decoder_trigger;
+        CData/*0:0*/ top__DOT__cpu__DOT__decoder_trigger_q;
         CData/*0:0*/ top__DOT__cpu__DOT__decoder_pseudo_trigger;
+        CData/*0:0*/ top__DOT__cpu__DOT__decoder_pseudo_trigger_q;
         CData/*0:0*/ top__DOT__cpu__DOT__compressed_instr;
         CData/*0:0*/ top__DOT__cpu__DOT__is_lui_auipc_jal;
         CData/*0:0*/ top__DOT__cpu__DOT__is_lb_lh_lw_lbu_lhu;
@@ -127,7 +140,22 @@ VL_MODULE(Vtop) {
         CData/*0:0*/ top__DOT__cpu__DOT__is_alu_reg_reg;
         CData/*0:0*/ top__DOT__cpu__DOT__is_compare;
         CData/*0:0*/ top__DOT__cpu__DOT__is_rdcycle_rdcycleh_rdinstr_rdinstrh;
+        CData/*4:0*/ top__DOT__cpu__DOT__dbg_insn_rs1;
+        CData/*4:0*/ top__DOT__cpu__DOT__dbg_insn_rs2;
+        CData/*4:0*/ top__DOT__cpu__DOT__dbg_insn_rd;
+        CData/*0:0*/ top__DOT__cpu__DOT__dbg_rs1val_valid;
+        CData/*0:0*/ top__DOT__cpu__DOT__dbg_rs2val_valid;
+        CData/*4:0*/ top__DOT__cpu__DOT__q_insn_rs1;
+        CData/*4:0*/ top__DOT__cpu__DOT__q_insn_rs2;
+        CData/*4:0*/ top__DOT__cpu__DOT__q_insn_rd;
+        CData/*0:0*/ top__DOT__cpu__DOT__dbg_next;
+        CData/*0:0*/ top__DOT__cpu__DOT__launch_next_insn;
+        CData/*0:0*/ top__DOT__cpu__DOT__dbg_valid_insn;
+        CData/*4:0*/ top__DOT__cpu__DOT__cached_insn_rs1;
+        CData/*4:0*/ top__DOT__cpu__DOT__cached_insn_rs2;
+        CData/*4:0*/ top__DOT__cpu__DOT__cached_insn_rd;
         CData/*7:0*/ top__DOT__cpu__DOT__cpu_state;
+        CData/*1:0*/ top__DOT__cpu__DOT__irq_state;
         CData/*0:0*/ top__DOT__cpu__DOT__set_mem_do_rinst;
         CData/*0:0*/ top__DOT__cpu__DOT__set_mem_do_rdata;
         CData/*0:0*/ top__DOT__cpu__DOT__set_mem_do_wdata;
@@ -135,6 +163,9 @@ VL_MODULE(Vtop) {
         CData/*0:0*/ top__DOT__cpu__DOT__latched_stalu;
         CData/*0:0*/ top__DOT__cpu__DOT__latched_branch;
         CData/*0:0*/ top__DOT__cpu__DOT__latched_compr;
+    };
+    struct {
+        CData/*0:0*/ top__DOT__cpu__DOT__latched_trace;
         CData/*0:0*/ top__DOT__cpu__DOT__latched_is_lu;
         CData/*0:0*/ top__DOT__cpu__DOT__latched_is_lh;
         CData/*0:0*/ top__DOT__cpu__DOT__latched_is_lb;
@@ -143,9 +174,13 @@ VL_MODULE(Vtop) {
         CData/*0:0*/ top__DOT__cpu__DOT__pcpi_timeout;
         CData/*0:0*/ top__DOT__cpu__DOT__do_waitirq;
         CData/*0:0*/ top__DOT__cpu__DOT__alu_out_0;
+        CData/*0:0*/ top__DOT__cpu__DOT__alu_out_0_q;
+        CData/*0:0*/ top__DOT__cpu__DOT__alu_wait;
+        CData/*0:0*/ top__DOT__cpu__DOT__alu_wait_2;
         CData/*0:0*/ top__DOT__cpu__DOT__alu_eq;
         CData/*0:0*/ top__DOT__cpu__DOT__alu_ltu;
         CData/*0:0*/ top__DOT__cpu__DOT__alu_lts;
+        CData/*0:0*/ top__DOT__cpu__DOT__clear_prefetched_high_word_q;
         CData/*0:0*/ top__DOT__cpu__DOT__cpuregs_write;
         CData/*0:0*/ top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__instr_mul;
         CData/*0:0*/ top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__instr_mulh;
@@ -156,21 +191,27 @@ VL_MODULE(Vtop) {
         CData/*6:0*/ top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__mul_counter;
         CData/*0:0*/ top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__mul_waiting;
         CData/*0:0*/ top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__mul_finish;
+        SData/*15:0*/ top__DOT__cpu__DOT__mem_16bit_buffer;
         IData/*31:0*/ top__DOT__mem_addr;
         IData/*31:0*/ top__DOT__mem_wdata;
         IData/*31:0*/ top__DOT__mem_rdata;
         IData/*31:0*/ top__DOT__pcpi_insn;
         IData/*31:0*/ top__DOT__pcpi_rd;
-    };
-    struct {
         IData/*31:0*/ top__DOT__cpu__DOT__mem_la_wdata;
+        IData/*31:0*/ top__DOT__cpu__DOT__eoi;
         IData/*31:0*/ top__DOT__cpu__DOT__reg_pc;
         IData/*31:0*/ top__DOT__cpu__DOT__reg_next_pc;
         IData/*31:0*/ top__DOT__cpu__DOT__reg_op1;
         IData/*31:0*/ top__DOT__cpu__DOT__reg_op2;
         IData/*31:0*/ top__DOT__cpu__DOT__reg_out;
+        IData/*31:0*/ top__DOT__cpu__DOT__next_insn_opcode;
+        IData/*31:0*/ top__DOT__cpu__DOT__dbg_insn_opcode;
+        IData/*31:0*/ top__DOT__cpu__DOT__dbg_insn_addr;
         IData/*31:0*/ top__DOT__cpu__DOT__next_pc;
+        IData/*31:0*/ top__DOT__cpu__DOT__irq_mask;
+        IData/*31:0*/ top__DOT__cpu__DOT__irq_pending;
         IData/*31:0*/ top__DOT__cpu__DOT__timer;
+        IData/*31:0*/ top__DOT__cpu__DOT__i;
         IData/*31:0*/ top__DOT__cpu__DOT__pcpi_mul_rd;
         IData/*31:0*/ top__DOT__cpu__DOT__pcpi_int_rd;
         IData/*31:0*/ top__DOT__cpu__DOT__mem_rdata_word;
@@ -178,14 +219,30 @@ VL_MODULE(Vtop) {
         IData/*31:0*/ top__DOT__cpu__DOT__mem_rdata_latched_noshuffle;
         IData/*31:0*/ top__DOT__cpu__DOT__decoded_imm;
         IData/*31:0*/ top__DOT__cpu__DOT__decoded_imm_j;
+        IData/*31:0*/ top__DOT__cpu__DOT__dbg_insn_imm;
+        IData/*31:0*/ top__DOT__cpu__DOT__dbg_rs1val;
+        IData/*31:0*/ top__DOT__cpu__DOT__dbg_rs2val;
+        IData/*31:0*/ top__DOT__cpu__DOT__q_insn_imm;
+        IData/*31:0*/ top__DOT__cpu__DOT__q_insn_opcode;
+        IData/*31:0*/ top__DOT__cpu__DOT__cached_insn_imm;
+        IData/*31:0*/ top__DOT__cpu__DOT__cached_insn_opcode;
+        WData/*127:0*/ top__DOT__cpu__DOT__dbg_ascii_state[4];
         IData/*31:0*/ top__DOT__cpu__DOT__current_pc;
+        IData/*31:0*/ top__DOT__cpu__DOT__next_irq_pending;
+    };
+    struct {
         IData/*31:0*/ top__DOT__cpu__DOT__alu_out;
         IData/*31:0*/ top__DOT__cpu__DOT__alu_out_q;
         IData/*31:0*/ top__DOT__cpu__DOT__cpuregs_wrdata;
         IData/*31:0*/ top__DOT__cpu__DOT__cpuregs_rs1;
         IData/*31:0*/ top__DOT__cpu__DOT__cpuregs_rs2;
+        QData/*35:0*/ top__DOT__cpu__DOT__trace_data;
         QData/*63:0*/ top__DOT__cpu__DOT__count_cycle;
         QData/*63:0*/ top__DOT__cpu__DOT__count_instr;
+        QData/*63:0*/ top__DOT__cpu__DOT__new_ascii_instr;
+        QData/*63:0*/ top__DOT__cpu__DOT__dbg_ascii_instr;
+        QData/*63:0*/ top__DOT__cpu__DOT__q_ascii_instr;
+        QData/*63:0*/ top__DOT__cpu__DOT__cached_ascii_instr;
         QData/*63:0*/ top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__rs1;
         QData/*63:0*/ top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__rs2;
         QData/*63:0*/ top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__rd;
@@ -225,6 +282,7 @@ VL_MODULE(Vtop) {
     CData/*3:0*/ __Vfunc_top__DOT__my_accel__DOT__fp4_decode__26__fp4;
     CData/*3:0*/ __Vfunc_top__DOT__my_accel__DOT__fp4_decode__27__fp4;
     CData/*3:0*/ __Vfunc_top__DOT__my_accel__DOT__fp4_decode__28__fp4;
+    CData/*7:0*/ __Vtableidx1;
     CData/*0:0*/ __Vclklast__TOP__clk;
     SData/*11:0*/ __Vfunc_top__DOT__my_accel__DOT__fp4_decode__13__Vfuncout;
     SData/*11:0*/ __Vfunc_top__DOT__my_accel__DOT__fp4_decode__14__Vfuncout;
@@ -242,6 +300,8 @@ VL_MODULE(Vtop) {
     SData/*11:0*/ __Vfunc_top__DOT__my_accel__DOT__fp4_decode__26__Vfuncout;
     SData/*11:0*/ __Vfunc_top__DOT__my_accel__DOT__fp4_decode__27__Vfuncout;
     SData/*11:0*/ __Vfunc_top__DOT__my_accel__DOT__fp4_decode__28__Vfuncout;
+    CData/*0:0*/ __Vm_traceActivity[3];
+    static WData/*127:0*/ __Vtable1_top__DOT__cpu__DOT__dbg_ascii_state[256][4];
     
     // INTERNAL VARIABLES
     // Internals; generally not touched by application code
@@ -257,6 +317,8 @@ VL_MODULE(Vtop) {
     Vtop(const char* name = "TOP");
     /// Destroy the model; called (often implicitly) by application code
     ~Vtop();
+    /// Trace signals in the model; called by application code
+    void trace(VerilatedVcdC* tfp, int levels, int options = 0);
     
     // API METHODS
     /// Evaluate the model.  Application must call when inputs change.
@@ -293,6 +355,16 @@ VL_MODULE(Vtop) {
     static void _initial__TOP__3(Vtop__Syms* __restrict vlSymsp) VL_ATTR_COLD;
     static void _sequent__TOP__1(Vtop__Syms* __restrict vlSymsp);
     static void _settle__TOP__2(Vtop__Syms* __restrict vlSymsp) VL_ATTR_COLD;
+  private:
+    static void traceChgSub0(void* userp, VerilatedVcd* tracep);
+    static void traceChgTop0(void* userp, VerilatedVcd* tracep);
+    static void traceCleanup(void* userp, VerilatedVcd* /*unused*/);
+    static void traceFullSub0(void* userp, VerilatedVcd* tracep) VL_ATTR_COLD;
+    static void traceFullTop0(void* userp, VerilatedVcd* tracep) VL_ATTR_COLD;
+    static void traceInitSub0(void* userp, VerilatedVcd* tracep) VL_ATTR_COLD;
+    static void traceInitTop(void* userp, VerilatedVcd* tracep) VL_ATTR_COLD;
+    void traceRegister(VerilatedVcd* tracep) VL_ATTR_COLD;
+    static void traceInit(void* userp, VerilatedVcd* tracep, uint32_t code) VL_ATTR_COLD;
 } VL_ATTR_ALIGNED(VL_CACHE_LINE_BYTES);
 
 //----------
