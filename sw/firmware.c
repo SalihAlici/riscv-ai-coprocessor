@@ -1,91 +1,72 @@
 #include <stdint.h>
 
 #define OUTPORT 0x10000000
-#define ARRAY_SIZE 128 // 128 Elemanlı Dev Dizi
+#define N 8 // 8x8 Matris
 
-// --- BÜYÜK VERİ SETİ ---
-// CPU için tek tek tanımlamamıza gerek yok, döngüde varmış gibi davranacağız.
-// Piksel Değeri: 1
-// Ağırlık Değeri: 2
-// BEKLENEN SONUÇ: 128 * (1 * 2) = 256
+void print_val(int32_t val) { *(volatile int32_t*)OUTPORT = val; }
+static inline uint32_t get_cycles() { uint32_t c; asm volatile ("rdcycle %0" : "=r" (c)); return c; }
 
-void print_val(int32_t val) {
-    *(volatile int32_t*)OUTPORT = val;
-}
-
-static inline uint32_t get_cycles() {
-    uint32_t cycles;
-    asm volatile ("rdcycle %0" : "=r" (cycles));
-    return cycles;
-}
-
-// 1. YAZILIM (CPU) - Amele Yöntemi
-// 128 kere dönüp tek tek çarpacak
-int32_t software_test() {
-    int32_t sum = 0;
-    int32_t p = 1; // Piksel hep 1
-    int32_t w = 2; // Ağırlık hep 2
-    
-    for(int i=0; i < ARRAY_SIZE; i++) {
-        sum += p * w; 
+// 1. YAZILIM (CPU) - Klasik Matris Carpimi (O^3)
+int32_t software_matmul() {
+    int32_t total = 0;
+    // CPU 3 tane ic ice dongu kurmak zorundadir
+    for(int i=0; i<N; i++) {       // Satir
+        for(int j=0; j<N; j++) {   // Sutun
+            int32_t sum = 0;
+            for(int k=0; k<N; k++) { // Ic Carpim (Dot Product)
+                // A[i][k]=1, B[k][j]=2 varsayiyoruz
+                sum += 1 * 2; 
+            }
+            total += sum;
+        }
     }
-    return sum;
+    return total;
 }
 
-// 2. DONANIM (HIZLANDIRICI) - Patron Yöntemi
-// 128 veriyi 8'erli paketleyip 16 kerede bitirecek
-int32_t hardware_test() {
-    int32_t total_sum = 0;
-    int32_t chunk_res;
+// 2. DONANIM (ACC) - Hizlandirilmis Matris Carpimi (O^2)
+int32_t hardware_matmul() {
+    int32_t total = 0;
+    int32_t dot_res;
     
-    // Paket Hazırlığı:
-    // p_pack: Sekiz tane 1 -> 0x11111111
-    // w_pack: Sekiz tane 2 -> 0x22222222
-    uint32_t p_pack = 0x11111111; 
-    uint32_t w_pack = 0x22222222;
+    // Paketler: 8 adet '1' ve 8 adet '2'
+    uint32_t row_pack = 0x11111111; 
+    uint32_t col_pack = 0x22222222;
 
-    // 128 elemanı 8'e böl = 16 Tur
-    for(int i=0; i < (ARRAY_SIZE / 8); i++) {
-        // Donanımı çağır (Bir kerede 8 işlem yapar)
-        asm volatile (
-            ".insn r 0x0B, 0, 0, %0, %1, %2" 
-            : "=r"(chunk_res) : "r"(w_pack), "r"(p_pack)
-        );
-        total_sum += chunk_res;
+    // Donanim sayesinde en icteki 'k' dongusune gerek kalmaz!
+    for(int i=0; i<N; i++) {       // Satir
+        for(int j=0; j<N; j++) {   // Sutun
+            
+            // TEK KOMUTLA 8 CARPIM + 8 TOPLAMA
+            asm volatile (
+                ".insn r 0x0B, 0, 0, %0, %1, %2" 
+                : "=r"(dot_res) : "r"(row_pack), "r"(col_pack)
+            );
+            
+            total += dot_res;
+        }
     }
-    return total_sum;
+    return total;
 }
 
 void main() {
-    print_val(0x11111111); // BAŞLADI
-
-    // --- TEST 1: YAZILIM (CPU) ---
+    print_val(0x11111111);
+    
+    // CPU TESTI
     uint32_t t1 = get_cycles();
-    int32_t soft_res = software_test();
+    int32_t cpu_res = software_matmul();
     uint32_t t2 = get_cycles();
-    
-    print_val(0xAAAAAAAA); // Yazılım Bitti
-    print_val(t2 - t1);    // SÜRE
-    print_val(soft_res);   // SONUÇ (256 Bekleniyor)
+    print_val(0xAAAAAAAA); print_val(t2-t1); print_val(cpu_res);
 
-    // --- TEST 2: DONANIM ---
+    // DONANIM TESTI
     uint32_t t3 = get_cycles();
-    int32_t hard_res = hardware_test(); 
+    int32_t acc_res = hardware_matmul();
     uint32_t t4 = get_cycles();
+    print_val(0xBBBBBBBB); print_val(t4-t3); print_val(acc_res);
 
-    print_val(0xBBBBBBBB); // Donanım Bitti
-    print_val(t4 - t3);    // SÜRE
-    print_val(hard_res);   // SONUÇ (256 Bekleniyor)
-
-    // --- 3. KARŞILAŞTIRMA ---
-    print_val(0xCCCCCCCC); 
+    // KARSILASTIRMA (Beklenen 1024)
+    print_val(0xCCCCCCCC);
+    if(acc_res == 1024 && cpu_res == 1024 && (t4-t3) < (t2-t1)) print_val(0x055CCE55);
+    else print_val(0xFA1L);
     
-    // Sonuçlar 256 ise ve Donanım hızlıysa SUCCESS
-    if (hard_res == 256 && soft_res == 256 && (t4-t3) < (t2-t1)) { 
-        print_val(0x055CCE55); // SUCCESS
-    } else {
-        print_val(0xFA1L);     // FAIL
-    }
-    
-    print_val(0xFFFFFFFF); // SON
+    print_val(0xFFFFFFFF);
 }
