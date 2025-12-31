@@ -26,6 +26,7 @@ VL_MODULE(Vtop) {
     // propagate new values into/out from the Verilated model.
     VL_IN8(clk,0,0);
     VL_IN8(resetn,0,0);
+    VL_OUT8(trap,0,0);
     VL_OUT8(out_valid,0,0);
     VL_OUT(out_data,31,0);
     
@@ -35,11 +36,8 @@ VL_MODULE(Vtop) {
     struct {
         CData/*0:0*/ top__DOT__mem_valid;
         CData/*0:0*/ top__DOT__mem_instr;
-        CData/*0:0*/ top__DOT__mem_ready;
         CData/*3:0*/ top__DOT__mem_wstrb;
-        CData/*0:0*/ top__DOT__trap_signal;
         CData/*0:0*/ top__DOT__pcpi_valid;
-        CData/*0:0*/ top__DOT__pcpi_wr;
         CData/*0:0*/ top__DOT__pcpi_ready;
         CData/*0:0*/ top__DOT__cpu__DOT__mem_la_read;
         CData/*0:0*/ top__DOT__cpu__DOT__mem_la_write;
@@ -51,6 +49,9 @@ VL_MODULE(Vtop) {
         CData/*0:0*/ top__DOT__cpu__DOT__pcpi_mul_wr;
         CData/*0:0*/ top__DOT__cpu__DOT__pcpi_mul_wait;
         CData/*0:0*/ top__DOT__cpu__DOT__pcpi_mul_ready;
+        CData/*0:0*/ top__DOT__cpu__DOT__pcpi_div_wr;
+        CData/*0:0*/ top__DOT__cpu__DOT__pcpi_div_wait;
+        CData/*0:0*/ top__DOT__cpu__DOT__pcpi_div_ready;
         CData/*0:0*/ top__DOT__cpu__DOT__pcpi_int_wr;
         CData/*0:0*/ top__DOT__cpu__DOT__pcpi_int_ready;
         CData/*1:0*/ top__DOT__cpu__DOT__mem_state;
@@ -191,6 +192,15 @@ VL_MODULE(Vtop) {
         CData/*6:0*/ top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__mul_counter;
         CData/*0:0*/ top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__mul_waiting;
         CData/*0:0*/ top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__mul_finish;
+        CData/*0:0*/ top__DOT__cpu__DOT__genblk4__DOT__pcpi_div__DOT__instr_div;
+        CData/*0:0*/ top__DOT__cpu__DOT__genblk4__DOT__pcpi_div__DOT__instr_divu;
+        CData/*0:0*/ top__DOT__cpu__DOT__genblk4__DOT__pcpi_div__DOT__instr_rem;
+        CData/*0:0*/ top__DOT__cpu__DOT__genblk4__DOT__pcpi_div__DOT__instr_remu;
+        CData/*0:0*/ top__DOT__cpu__DOT__genblk4__DOT__pcpi_div__DOT__pcpi_wait_q;
+        CData/*0:0*/ top__DOT__cpu__DOT__genblk4__DOT__pcpi_div__DOT__start;
+        CData/*0:0*/ top__DOT__cpu__DOT__genblk4__DOT__pcpi_div__DOT__running;
+        CData/*0:0*/ top__DOT__cpu__DOT__genblk4__DOT__pcpi_div__DOT__outsign;
+        CData/*0:0*/ top__DOT__my_accel__DOT__pcpi_wr;
         SData/*15:0*/ top__DOT__cpu__DOT__mem_16bit_buffer;
         IData/*31:0*/ top__DOT__mem_addr;
         IData/*31:0*/ top__DOT__mem_wdata;
@@ -198,6 +208,7 @@ VL_MODULE(Vtop) {
         IData/*31:0*/ top__DOT__pcpi_insn;
         IData/*31:0*/ top__DOT__pcpi_rd;
         IData/*31:0*/ top__DOT__cpu__DOT__mem_la_wdata;
+        IData/*31:0*/ top__DOT__cpu__DOT__irq;
         IData/*31:0*/ top__DOT__cpu__DOT__eoi;
         IData/*31:0*/ top__DOT__cpu__DOT__reg_pc;
         IData/*31:0*/ top__DOT__cpu__DOT__reg_next_pc;
@@ -213,11 +224,14 @@ VL_MODULE(Vtop) {
         IData/*31:0*/ top__DOT__cpu__DOT__timer;
         IData/*31:0*/ top__DOT__cpu__DOT__i;
         IData/*31:0*/ top__DOT__cpu__DOT__pcpi_mul_rd;
+        IData/*31:0*/ top__DOT__cpu__DOT__pcpi_div_rd;
         IData/*31:0*/ top__DOT__cpu__DOT__pcpi_int_rd;
         IData/*31:0*/ top__DOT__cpu__DOT__mem_rdata_word;
         IData/*31:0*/ top__DOT__cpu__DOT__mem_rdata_q;
         IData/*31:0*/ top__DOT__cpu__DOT__mem_rdata_latched_noshuffle;
         IData/*31:0*/ top__DOT__cpu__DOT__decoded_imm;
+    };
+    struct {
         IData/*31:0*/ top__DOT__cpu__DOT__decoded_imm_j;
         IData/*31:0*/ top__DOT__cpu__DOT__dbg_insn_imm;
         IData/*31:0*/ top__DOT__cpu__DOT__dbg_rs1val;
@@ -229,13 +243,14 @@ VL_MODULE(Vtop) {
         WData/*127:0*/ top__DOT__cpu__DOT__dbg_ascii_state[4];
         IData/*31:0*/ top__DOT__cpu__DOT__current_pc;
         IData/*31:0*/ top__DOT__cpu__DOT__next_irq_pending;
-    };
-    struct {
         IData/*31:0*/ top__DOT__cpu__DOT__alu_out;
         IData/*31:0*/ top__DOT__cpu__DOT__alu_out_q;
         IData/*31:0*/ top__DOT__cpu__DOT__cpuregs_wrdata;
         IData/*31:0*/ top__DOT__cpu__DOT__cpuregs_rs1;
         IData/*31:0*/ top__DOT__cpu__DOT__cpuregs_rs2;
+        IData/*31:0*/ top__DOT__cpu__DOT__genblk4__DOT__pcpi_div__DOT__dividend;
+        IData/*31:0*/ top__DOT__cpu__DOT__genblk4__DOT__pcpi_div__DOT__quotient;
+        IData/*31:0*/ top__DOT__cpu__DOT__genblk4__DOT__pcpi_div__DOT__quotient_msk;
         QData/*35:0*/ top__DOT__cpu__DOT__trace_data;
         QData/*63:0*/ top__DOT__cpu__DOT__count_cycle;
         QData/*63:0*/ top__DOT__cpu__DOT__count_instr;
@@ -253,7 +268,8 @@ VL_MODULE(Vtop) {
         QData/*63:0*/ top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rd;
         QData/*63:0*/ top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdx;
         QData/*63:0*/ top__DOT__cpu__DOT__genblk2__DOT__pcpi_mul__DOT__next_rdt;
-        IData/*31:0*/ top__DOT__memory[4096];
+        QData/*62:0*/ top__DOT__cpu__DOT__genblk4__DOT__pcpi_div__DOT__divisor;
+        IData/*31:0*/ top__DOT__memory[16384];
         IData/*31:0*/ top__DOT__cpu__DOT__cpuregs[32];
         CData/*3:0*/ top__DOT__my_accel__DOT__a_raw[8];
         CData/*3:0*/ top__DOT__my_accel__DOT__b_raw[8];
@@ -352,9 +368,9 @@ VL_MODULE(Vtop) {
   public:
     static void _eval_initial(Vtop__Syms* __restrict vlSymsp) VL_ATTR_COLD;
     static void _eval_settle(Vtop__Syms* __restrict vlSymsp) VL_ATTR_COLD;
-    static void _initial__TOP__3(Vtop__Syms* __restrict vlSymsp) VL_ATTR_COLD;
-    static void _sequent__TOP__1(Vtop__Syms* __restrict vlSymsp);
-    static void _settle__TOP__2(Vtop__Syms* __restrict vlSymsp) VL_ATTR_COLD;
+    static void _initial__TOP__1(Vtop__Syms* __restrict vlSymsp) VL_ATTR_COLD;
+    static void _sequent__TOP__2(Vtop__Syms* __restrict vlSymsp);
+    static void _settle__TOP__3(Vtop__Syms* __restrict vlSymsp) VL_ATTR_COLD;
   private:
     static void traceChgSub0(void* userp, VerilatedVcd* tracep);
     static void traceChgTop0(void* userp, VerilatedVcd* tracep);

@@ -1,63 +1,91 @@
 #include <stdint.h>
-#include "model_data.h" 
 
 #define OUTPORT 0x10000000
+#define ARRAY_SIZE 128 // 128 Elemanlı Dev Dizi
 
-// Kronometre (Cycle Sayacı)
+// --- BÜYÜK VERİ SETİ ---
+// CPU için tek tek tanımlamamıza gerek yok, döngüde varmış gibi davranacağız.
+// Piksel Değeri: 1
+// Ağırlık Değeri: 2
+// BEKLENEN SONUÇ: 128 * (1 * 2) = 256
+
+void print_val(int32_t val) {
+    *(volatile int32_t*)OUTPORT = val;
+}
+
 static inline uint32_t get_cycles() {
     uint32_t cycles;
     asm volatile ("rdcycle %0" : "=r" (cycles));
     return cycles;
 }
 
-// Negatif sayıları düzgün basmak için
-void print_val(int32_t val) {
-    *(volatile int32_t*)OUTPORT = val;
+// 1. YAZILIM (CPU) - Amele Yöntemi
+// 128 kere dönüp tek tek çarpacak
+int32_t software_test() {
+    int32_t sum = 0;
+    int32_t p = 1; // Piksel hep 1
+    int32_t w = 2; // Ağırlık hep 2
+    
+    for(int i=0; i < ARRAY_SIZE; i++) {
+        sum += p * w; 
+    }
+    return sum;
+}
+
+// 2. DONANIM (HIZLANDIRICI) - Patron Yöntemi
+// 128 veriyi 8'erli paketleyip 16 kerede bitirecek
+int32_t hardware_test() {
+    int32_t total_sum = 0;
+    int32_t chunk_res;
+    
+    // Paket Hazırlığı:
+    // p_pack: Sekiz tane 1 -> 0x11111111
+    // w_pack: Sekiz tane 2 -> 0x22222222
+    uint32_t p_pack = 0x11111111; 
+    uint32_t w_pack = 0x22222222;
+
+    // 128 elemanı 8'e böl = 16 Tur
+    for(int i=0; i < (ARRAY_SIZE / 8); i++) {
+        // Donanımı çağır (Bir kerede 8 işlem yapar)
+        asm volatile (
+            ".insn r 0x0B, 0, 0, %0, %1, %2" 
+            : "=r"(chunk_res) : "r"(w_pack), "r"(p_pack)
+        );
+        total_sum += chunk_res;
+    }
+    return total_sum;
 }
 
 void main() {
-    print_val(9999); // Başlangıç Sinyali
+    print_val(0x11111111); // BAŞLADI
 
-    uint32_t start_time, end_time, total_time;
+    // --- TEST 1: YAZILIM (CPU) ---
+    uint32_t t1 = get_cycles();
+    int32_t soft_res = software_test();
+    uint32_t t2 = get_cycles();
     
-    // --- KRONOMETREYİ BAŞLAT ---
-    start_time = get_cycles();
+    print_val(0xAAAAAAAA); // Yazılım Bitti
+    print_val(t2 - t1);    // SÜRE
+    print_val(soft_res);   // SONUÇ (256 Bekleniyor)
 
-    // --- CONV2D İŞLEMİ (DONANIM İLE) ---
-    // Resmin üzerinde geziyoruz (3x3'lük kısım)
-    for (int y = 0; y < 3; y++) { 
-        for (int x = 0; x < 3; x++) { 
-            
-            int32_t acc = 0;
-            int w_idx = 0;
+    // --- TEST 2: DONANIM ---
+    uint32_t t3 = get_cycles();
+    int32_t hard_res = hardware_test(); 
+    uint32_t t4 = get_cycles();
 
-            // Çekirdek (Kernel) Döngüsü
-            for (int ky = 0; ky < 3; ky++) {
-                for (int kx = 0; kx < 3; kx++) {
-                    uint32_t p = img_data[(y + ky) * IMG_W + (x + kx)];
-                    uint32_t w = weight_data[w_idx++];
-                    
-                    int32_t res;
-                    
-                    // DONANIMI ÇAĞIR (SİHİRLİ KOMUT: 0x0B)
-                    asm volatile (
-                        ".insn r 0x0B, 0, 0, %0, %1, %2" 
-                        : "=r"(res) : "r"(w), "r"(p)
-                    );
-                    
-                    acc += res;
-                }
-            }
-            // Her pikselin sonucunu bas (Doğruluk için: -805, 1038 vb.)
-            print_val(acc);
-        }
+    print_val(0xBBBBBBBB); // Donanım Bitti
+    print_val(t4 - t3);    // SÜRE
+    print_val(hard_res);   // SONUÇ (256 Bekleniyor)
+
+    // --- 3. KARŞILAŞTIRMA ---
+    print_val(0xCCCCCCCC); 
+    
+    // Sonuçlar 256 ise ve Donanım hızlıysa SUCCESS
+    if (hard_res == 256 && soft_res == 256 && (t4-t3) < (t2-t1)) { 
+        print_val(0x055CCE55); // SUCCESS
+    } else {
+        print_val(0xFA1L);     // FAIL
     }
-
-    // --- KRONOMETREYİ DURDUR ---
-    end_time = get_cycles();
-    total_time = end_time - start_time;
-
-    // --- SONUÇLARI RAPORLA ---
-    print_val(7777);       // Bitiş Ayracı
-    print_val(total_time); // TOPLAM SÜRE
+    
+    print_val(0xFFFFFFFF); // SON
 }
