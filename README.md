@@ -1,42 +1,42 @@
 # riscv-ai-coprocessor
 
-PicoRV32 RISC-V işlemcisine PCPI arayüzünden bağlanan, yapay zekâ işlemleri için küçük bir SIMD hızlandırıcı. Hızlandırıcı tek bir özel komutla 8 elemanlı 4 bitlik iki vektörün iç çarpımını (nokta çarpımı) bir saat çevriminde hesaplar. Konvolüsyon ve matris çarpımı (GEMM) gibi işlemlerin iç döngüsü bu komutla hızlandırılır.
+A small SIMD accelerator for AI workloads, attached to the PicoRV32 RISC-V core through its PCPI interface. With a single custom instruction, the accelerator computes the dot product of two 8-element vectors of 4-bit values in one clock cycle. This speeds up the inner loop of operations such as convolution and matrix multiplication (GEMM).
 
-Proje Verilog ile yazılmıştır ve Verilator ile simüle edilir. İşlemcide çalışan test programları C ile yazılmıştır.
+The hardware is written in Verilog and simulated with Verilator; the test programs running on the processor are written in C.
 
-## Nasıl çalışır
+## How it works
 
-![Mimari](docs/mimari.png)
+![Architecture](docs/mimari.png)
 
-- **Özel komut:** RISC-V'nin `custom-0` opcode alanı (`0x0B`) kullanılır. C kodundan satır içi assembly ile çağrılır:
+- **Custom instruction:** uses the RISC-V `custom-0` opcode space (`0x0B`). It is called from C with inline assembly:
   ```c
-  asm volatile (".insn r 0x0B, 0, 0, %0, %1, %2" : "=r"(sonuc) : "r"(agirliklar), "r"(girdiler));
+  asm volatile (".insn r 0x0B, 0, 0, %0, %1, %2" : "=r"(result) : "r"(weights), "r"(inputs));
   ```
-- **Veri biçimi:** `rs1` ve `rs2` yazmaçlarının her biri sekiz adet 4 bitlik değer taşır. Değer tablosu: ±{0, 0,0625, 0,125, 0,25, 0,5, 0,75, 1,0, 1,5} (E2M1 benzeri FP4).
-- **Donanım:** değerler sabit noktaya çevrilir (1,0 = 16), sekiz çarpım paralel yapılır ve toplanır. Sonuç `rd` yazmacına 256 ölçekli tam sayı olarak döner.
-- **İşlemci:** PicoRV32, çarpma ve bölme açık (`ENABLE_MUL`, `ENABLE_DIV`), 64 KB bellek. Program `sw/firmware.hex` dosyasından belleğe yüklenir.
+- **Data format:** `rs1` and `rs2` each hold eight 4-bit values. Value table: ±{0, 0.0625, 0.125, 0.25, 0.5, 0.75, 1.0, 1.5} (an E2M1-like FP4 format).
+- **Hardware:** the values are converted to fixed point (1.0 = 16), the eight products are computed in parallel and summed. The result is returned in `rd` as an integer scaled by 256.
+- **Processor:** PicoRV32 with multiply and divide enabled (`ENABLE_MUL`, `ENABLE_DIV`) and 64 KB of memory. The program is loaded into memory from `sw/firmware.hex`.
 
-## Dosyalar
+## Files
 
-| Dosya | İçerik |
+| File | Contents |
 |---|---|
-| `rtl/ai_accelerator.v` | FP4 SIMD hızlandırıcı (PCPI eş işlemcisi) |
-| `rtl/picorv32.v` | PicoRV32 RISC-V çekirdeği (YosysHQ) |
-| `sim/top.v` | İşlemci + hızlandırıcı + bellek üst modülü |
-| `sim/sim_main.cpp` | Verilator test ortamı; çıkış portuna yazılanları konsola basar |
-| `sw/firmware.c` | İşlemcide çalışan test programı |
-| `sw/start.S`, `sw/sections.lds` | Başlangıç kodu ve bağlayıcı betiği |
-| `sw/makehex.py` | `firmware.bin` → `firmware.hex` dönüştürücü |
-| `sw/gen_model.py` | Rastgele FP4 test verisi ve Python referans sonuçları üretir (`model_data.h`) |
+| `rtl/ai_accelerator.v` | FP4 SIMD accelerator (PCPI coprocessor) |
+| `rtl/picorv32.v` | PicoRV32 RISC-V core (YosysHQ) |
+| `sim/top.v` | Top module: processor + accelerator + memory |
+| `sim/sim_main.cpp` | Verilator testbench; prints whatever the program writes to the output port |
+| `sw/firmware.c` | Test program running on the processor |
+| `sw/start.S`, `sw/sections.lds` | Startup code and linker script |
+| `sw/makehex.py` | `firmware.bin` → `firmware.hex` converter |
+| `sw/gen_model.py` | Generates random FP4 test data and Python reference results (`model_data.h`) |
 
-## Kurulum ve çalıştırma
+## Build and run
 
-**Gerekenler** (Linux ya da WSL önerilir):
-- RISC-V GCC araç zinciri (`riscv64-unknown-elf-gcc` ya da `riscv32-unknown-elf-gcc`)
+**Requirements** (Linux or WSL recommended):
+- RISC-V GCC toolchain (`riscv64-unknown-elf-gcc` or `riscv32-unknown-elf-gcc`)
 - Verilator
-- Python 3 ve NumPy (`gen_model.py` için)
+- Python 3 and NumPy (for `gen_model.py`)
 
-Ubuntu'da örnek kurulum:
+Example setup on Ubuntu:
 ```bash
 sudo apt install gcc-riscv64-unknown-elf verilator python3-numpy
 git clone https://github.com/SalihAlici/riscv-ai-coprocessor.git
@@ -44,30 +44,30 @@ cd riscv-ai-coprocessor
 ```
 
 ```bash
-# 1) Yazılımı derle ve belleğe yüklenecek hex dosyasını üret
+# 1) Build the software and generate the memory image
 cd sw
 riscv64-unknown-elf-gcc -march=rv32im -mabi=ilp32 -nostdlib -O2 -T sections.lds start.S firmware.c -o firmware.elf
 riscv64-unknown-elf-objcopy -O binary firmware.elf firmware.bin
 python3 makehex.py firmware.bin > firmware.hex
 
-# 2) Simülasyonu derle ve çalıştır
+# 2) Build and run the simulation
 cd ../sim
 verilator --cc --exe --build -Wno-fatal top.v ../rtl/picorv32.v ../rtl/ai_accelerator.v sim_main.cpp
 ./obj_dir/Vtop
 ```
 
-Dalga biçimi kaydı için `sim_main.cpp` içindeki `trace` satırları açılabilir; çıktı `waveform.vcd` olur.
+To record a waveform, enable the `trace` lines in `sim_main.cpp`; the output is written to `waveform.vcd`.
 
-## Testler ve sonuçlar
+## Tests and results
 
-Geliştirme sırasında şu testler yapıldı (commit geçmişinde):
-- PicoRV32 simülasyonu ve assembly testi.
-- **Hızlandırıcı ve yazılım karşılaştırması:** aynı iç çarpım INT4 sürümünde yazılımla 2180, hızlandırıcıyla 92 çevrimde hesaplandı (yaklaşık 23,7 kat hızlanma; çevrimler `rdcycle` ile ölçüldü).
-- 128 elemanlı dizi testi.
-- Matris çarpımı (GEMM) testi.
+The following tests were run during development (see the commit history):
+- PicoRV32 simulation and assembly test.
+- **Accelerator vs. software:** in the INT4 version, the same dot product took 2180 cycles in software and 92 cycles with the accelerator (about 23.7× faster; cycles measured with `rdcycle`).
+- 128-element array test.
+- Matrix multiplication (GEMM) test.
 
-Depodaki güncel `firmware.c` bir görüntü işleme gösterimi çalıştırır: 32×32 gri tonlu görüntüde kenar tespiti yapar ve sonucu konsola ASCII olarak çizer.
+The current `firmware.c` runs an image processing demo: it performs edge detection on a 32×32 grayscale image and draws the result in the console as ASCII art.
 
-## Lisans
+## License
 
-`rtl/picorv32.v` YosysHQ'nun PicoRV32 projesine aittir (ISC lisansı).
+`rtl/picorv32.v` belongs to YosysHQ's PicoRV32 project (ISC license).
